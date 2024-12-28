@@ -97,7 +97,7 @@ def obtener_html_followers(user):
     return soup
 
 def extraer_ids_usuario(sp,marca, html):
-    
+    print("Iniciando Extracción de Ids Usuario")
     followers = html.findAll("div",{"class":"Box__BoxComponent-sc-y4nds-0 kcRGDn Box-sc-1njtxi4-0 hscyXl aAYpzGljXQv1_zfopxaH Card"})
     id_followers = []
     for follower in followers:
