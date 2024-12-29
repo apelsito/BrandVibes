@@ -70,7 +70,7 @@ def load_credentials():
         client_secret=CLIENT_SECRET,
         redirect_uri=REDIRECT_URI,
         scope=SCOPES
-    ))
+    ), requests_timeout=5)
 
     return sp
 
@@ -124,3 +124,28 @@ def extraer_ids_usuario(sp,marca, html):
     })
     return df
 
+def obtener_playlists(sp, user_id):
+    playlists = sp.user_playlists(user_id)
+    dictio = {}
+
+    if not playlists['items']:
+        return "No playlists"
+    
+    # Iterar sobre todas las playlists (manejar paginación)
+    while playlists:
+        for playlist in playlists['items']:
+            dictio[playlist["name"]] = playlist["id"]
+
+        # Verificar si hay más páginas de playlists
+        if playlists['next']:
+            playlists = sp.next(playlists)
+        else:
+            playlists = None
+    return dictio
+
+def obtener_generos(sp,lista_canciones):
+    for item in tracks['items']:
+        track = item['track']
+        artist_id = track['artists'][0]['id']
+        artist = sp.artist(artist_id)
+        genres.update(artist['genres'])
