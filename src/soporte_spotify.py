@@ -23,6 +23,7 @@ from bs4 import BeautifulSoup
 
 # Requests
 import requests
+import base64
 
 import pandas as pd
 import numpy as np
@@ -70,9 +71,38 @@ def load_credentials():
         client_secret=CLIENT_SECRET,
         redirect_uri=REDIRECT_URI,
         scope=SCOPES
-    ), requests_timeout=5)
+    ), requests_timeout=50)
 
     return sp
+
+
+def request_token():
+    # 1. Credenciales de la aplicación
+    CLIENT_ID = os.getenv("client_ID")
+    CLIENT_SECRET = os.getenv("client_Secret")
+
+    # 2. URL para obtener el token
+    AUTH_URL = "https://accounts.spotify.com/api/token"
+
+    # 3. Solicitar el token de acceso
+    auth_data = {
+        "grant_type": "client_credentials"
+    }
+    auth_headers = {
+        "Authorization": f"Basic {base64.b64encode(f'{CLIENT_ID}:{CLIENT_SECRET}'.encode()).decode()}"
+    }
+
+    response = requests.post(AUTH_URL, data=auth_data, headers=auth_headers)
+
+    if response.status_code == 200:
+        access_token = response.json()["access_token"]
+        print("Token obtenido con éxito")
+    else:
+        print("Error al obtener el token:", response.json())
+        exit()
+    
+    return access_token
+
 
 def obtener_html_followers(user):
     # Iniciar el driver
@@ -149,3 +179,4 @@ def obtener_generos(sp,lista_canciones):
         artist_id = track['artists'][0]['id']
         artist = sp.artist(artist_id)
         genres.update(artist['genres'])
+
