@@ -76,7 +76,7 @@ def load_credentials():
     return sp
 
 
-def request_token():
+def request_token(silent = False):
     # 1. Credenciales de la aplicación
     CLIENT_ID = os.getenv("client_ID")
     CLIENT_SECRET = os.getenv("client_Secret")
@@ -96,7 +96,8 @@ def request_token():
 
     if response.status_code == 200:
         access_token = response.json()["access_token"]
-        print("Token obtenido con éxito")
+        if silent == False:
+            print("Token obtenido con éxito")
     else:
         print("Error al obtener el token:", response.json())
         exit()
@@ -173,10 +174,60 @@ def obtener_playlists(sp, user_id):
             playlists = None
     return dictio
 
-def obtener_generos(sp,lista_canciones):
-    for item in tracks['items']:
-        track = item['track']
-        artist_id = track['artists'][0]['id']
-        artist = sp.artist(artist_id)
-        genres.update(artist['genres'])
+def request_segura(url, token):
+    """
+    Verifica si la API de Spotify está disponible.
+    Si devuelve 200, devuelve True.
+    Si devuelve 429, espera el tiempo necesario.
+    """
+    while True:
+        response = requests.get(url, headers={"Authorization": f"Bearer {token}"})
+        if response.status_code == 200:
+            return True
+        elif response.status_code == 429:
+            retry_after = int(response.headers.get("Retry-After", 1))
+            print(f"Error 429: Rate limit alcanzado. Esperando {retry_after} segundos...")
+            sleep(retry_after)
+        else:
+            print(f"Error {response.status_code}. Verifica la solicitud.")
+            return False  # No se pudo procesar
 
+
+def obtener_artistas(sp, lista_ids_playlists):
+    """
+    Usa `requests` para verificar la disponibilidad y `spotipy` para procesar los datos.
+    """
+    dictio_artistas = {}
+    token = request_token(silent=True)  # Obtener el token una sola vez
+
+    for playlist_id in lista_ids_playlists:
+        # Construir la URL para verificar con `requests`
+        url = f"https://api.spotify.com/v1/playlists/{playlist_id}/tracks"
+
+        # Verificar disponibilidad con `requests`
+        if not request_segura(url, token):
+            print(f"No se pudo procesar la playlist {playlist_id}.")
+            continue
+
+        # Usar `spotipy` para procesar las canciones
+        canciones = sp.playlist_tracks(
+            playlist_id, 
+            fields="items.track(artists.name,artists.id),next", 
+            additional_types=("track",)
+        )
+
+        while canciones:
+            # Sacar canciones de la página actual
+            for cancion in canciones["items"]:
+                track = cancion["track"]
+                if track and "artists" in track: # Verficar que la canción no sea None
+                    for artist in track["artists"]:
+                        if artist["id"] not in dictio_artistas:
+                            dictio_artistas[artist["id"]] = artist["name"]
+
+            # Verificar si hay más páginas
+            if canciones["next"]:
+                canciones = sp.next(canciones)
+            else:
+                canciones = None
+    return dictio_artistas
