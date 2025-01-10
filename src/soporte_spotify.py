@@ -28,7 +28,7 @@ import base64
 import pandas as pd
 import numpy as np
 
-from time import sleep
+from time import sleep, time
 import random
 # Importar librerías para automatización de navegadores web con Selenium
 # -----------------------------------------------------------------------
@@ -75,11 +75,26 @@ def load_credentials():
 
     return sp
 
+import os
+import base64
+import requests
 
-def request_token(silent = False):
+def request_token():
+    """
+    Solicita un token de acceso a Spotify utilizando el flujo Client Credentials.
+    
+    Devuelve:
+        str: Token de acceso válido.
+    
+    Lanza:
+        Exception: Si no se pueden obtener las credenciales o el token.
+    """
     # 1. Credenciales de la aplicación
     CLIENT_ID = os.getenv("client_ID")
     CLIENT_SECRET = os.getenv("client_Secret")
+    
+    if not CLIENT_ID or not CLIENT_SECRET:
+        raise Exception("CLIENT_ID o CLIENT_SECRET no configurados. Asegúrate de configurar las variables de entorno correctamente.")
 
     # 2. URL para obtener el token
     AUTH_URL = "https://accounts.spotify.com/api/token"
@@ -96,13 +111,11 @@ def request_token(silent = False):
 
     if response.status_code == 200:
         access_token = response.json()["access_token"]
-        if silent == False:
-            print("Token obtenido con éxito")
+        print("Token obtenido con éxito")
+        return access_token
     else:
-        print("Error al obtener el token:", response.json())
-        exit()
-    
-    return access_token
+        error_message = response.json().get("error_description", "Error desconocido")
+        raise Exception(f"Error al obtener el token: {response.status_code} - {error_message}")
 
 
 def obtener_html_followers(user):
@@ -192,42 +205,102 @@ def request_segura(url, token):
             print(f"Error {response.status_code}. Verifica la solicitud.")
             return False  # No se pudo procesar
 
+def obtener_artistas(token, lista_ids_playlists):
+        """
+        Obtiene artistas de múltiples playlists y maneja rate limits.
+        
+        Args:
+            token (str): Token de acceso de Spotify.
+            lista_ids_playlists (list): Lista de IDs de playlists.
+        
+        Returns:
+            None
+        """
+        dictio_artistas = {}  # Para mantener un registro de artistas únicos
+        llamadas = 0  # Contador de llamadas a la API
+        inicio_tiempo = time.time()  # Tiempo de inicio para controlar el rate limit
 
-def obtener_artistas(sp, lista_ids_playlists):
-    """
-    Usa `requests` para verificar la disponibilidad y `spotipy` para procesar los datos.
-    """
-    dictio_artistas = {}
-    token = request_token(silent=True)  # Obtener el token una sola vez
+        for playlist_id in lista_ids_playlists:
+            # Controlar el rate limit
+            if llamadas >= 100:
+                tiempo_transcurrido = time.time() - inicio_tiempo
+                if tiempo_transcurrido < 60:
+                    sleep_time = 60 - tiempo_transcurrido
+                    print(f"Rate limit alcanzado. Durmiendo por {sleep_time:.2f} segundos...")
+                    time.sleep(sleep_time)
+                llamadas = 0  # Reiniciar el contador de llamadas
+                inicio_tiempo = time.time()  # Reiniciar el tiempo de inicio
 
-    for playlist_id in lista_ids_playlists:
-        # Construir la URL para verificar con `requests`
-        url = f"https://api.spotify.com/v1/playlists/{playlist_id}/tracks"
+            # Realizar la solicitud
+            url = f'https://api.spotify.com/v1/playlists/{playlist_id}/tracks?fields=items.track(artists.name,artists.id),next&limit=50&additional_types=track'
+            response = requests.get(url, headers={"Authorization": f"Bearer {token}"})
+            llamadas += 1  # Incrementar el contador de llamadas
 
-        # Verificar disponibilidad con `requests`
-        if not request_segura(url, token):
-            print(f"No se pudo procesar la playlist {playlist_id}.")
-            continue
-
-        # Usar `spotipy` para procesar las canciones
-        canciones = sp.playlist_tracks(
-            playlist_id, 
-            fields="items.track(artists.name,artists.id),next", 
-            additional_types=("track",)
-        )
-
-        while canciones:
-            # Sacar canciones de la página actual
-            for cancion in canciones["items"]:
-                track = cancion["track"]
-                if track and "artists" in track: # Verficar que la canción no sea None
-                    for artist in track["artists"]:
-                        if artist["id"] not in dictio_artistas:
-                            dictio_artistas[artist["id"]] = artist["name"]
-
-            # Verificar si hay más páginas
-            if canciones["next"]:
-                canciones = sp.next(canciones)
+            # Manejo de la respuesta
+            if response.status_code == 200:
+                canciones = response.json()
+                while canciones:
+                    for cancion in canciones["items"]:
+                        track = cancion.get("track")
+                        if track and "artists" in track:  # Verificar si hay datos de artistas
+                            for artist in track["artists"]:
+                                if artist["id"] not in dictio_artistas:
+                                    # Agregar al diccionario de artistas únicos
+                                    dictio_artistas[artist["id"]] = artist["name"]
+                    # Verificar si hay más páginas
+                    if canciones["next"]:
+                        token = request_token(silent=True)  # Obtener un nuevo token
+                        response = requests.get(canciones["next"], headers={"Authorization": f"Bearer {token}"})
+                        llamadas += 1  # Incrementar el contador de llamadas
+                        canciones = response.json()
+                    else:
+                        canciones = None
+            elif response.status_code == 429:  # Rate limit alcanzado
+                retry_after = int(response.headers.get("Retry-After", 1))
+                print(f"Rate limit alcanzado. Esperando {retry_after} segundos...")
+                time.sleep(retry_after)
+                token = request_token(silent=True)  # Obtener un nuevo token
             else:
-                canciones = None
-    return dictio_artistas
+                print(f"Error al procesar la playlist {playlist_id}. Código de estado: {response.status_code}")
+                continue
+        return dictio_artistas
+
+
+# def obtener_artistas(sp, lista_ids_playlists):
+#     """
+#     Usa `requests` para verificar la disponibilidad y `spotipy` para procesar los datos.
+#     """
+#     dictio_artistas = {}
+#     token = request_token(silent=True)  # Obtener el token una sola vez
+
+#     for playlist_id in lista_ids_playlists:
+#         # Construir la URL para verificar con `requests`
+#         url = f'https://api.spotify.com/v1/playlists/010Cm0KVT0lW8pqA2cGDN8/tracks?fields=items.track%28artists.name%2Cartists.id%29%2Cnext&limit=50&additional_types=track'
+#         response = requests.get(url, headers={"Authorization": f"Bearer {token}"})
+#         # Verificar disponibilidad con `requests`
+#         if not request_segura(url, token):
+#             print(f"No se pudo procesar la playlist {playlist_id}.")
+#             continue
+
+#         # Usar `spotipy` para procesar las canciones
+#         canciones = sp.playlist_tracks(
+#             playlist_id, 
+#             fields="items.track(artists.name,artists.id),next", 
+#             additional_types=("track",)
+#         )
+
+#         while canciones:
+#             # Sacar canciones de la página actual
+#             for cancion in canciones["items"]:
+#                 track = cancion["track"]
+#                 if track and "artists" in track: # Verficar que la canción no sea None
+#                     for artist in track["artists"]:
+#                         if artist["id"] not in dictio_artistas:
+#                             dictio_artistas[artist["id"]] = artist["name"]
+
+#             # Verificar si hay más páginas
+#             if canciones["next"]:
+#                 canciones = sp.next(canciones)
+#             else:
+#                 canciones = None
+#     return dictio_artistas
