@@ -206,64 +206,77 @@ def request_segura(url, token):
             return False  # No se pudo procesar
 
 def obtener_artistas(token, lista_ids_playlists):
-        """
-        Obtiene artistas de múltiples playlists y maneja rate limits.
-        
-        Args:
-            token (str): Token de acceso de Spotify.
-            lista_ids_playlists (list): Lista de IDs de playlists.
-        
-        Returns:
-            None
-        """
-        dictio_artistas = {}  # Para mantener un registro de artistas únicos
-        llamadas = 0  # Contador de llamadas a la API
-        inicio_tiempo = time.time()  # Tiempo de inicio para controlar el rate limit
+    """
+    Obtiene artistas de múltiples playlists y maneja rate limits.
+    
+    Args:
+        token (str): Token de acceso de Spotify.
+        lista_ids_playlists (list): Lista de IDs de playlists.
+    
+    Returns:
+        dict: Diccionario con IDs de artistas como claves y nombres como valores.
+    """
+    dictio_artistas = {}  # Para mantener un registro de artistas únicos
+    llamadas = 0  # Contador de llamadas a la API
+    inicio_tiempo = time.time()  # Tiempo de inicio para controlar el rate limit
 
-        for playlist_id in lista_ids_playlists:
+    for playlist_id in lista_ids_playlists:
+        while True:  # Loop para manejar errores y reintentos
             # Controlar el rate limit
-            if llamadas >= 100:
+            if llamadas >= 50:
                 tiempo_transcurrido = time.time() - inicio_tiempo
-                if tiempo_transcurrido < 60:
-                    sleep_time = 60 - tiempo_transcurrido
+                if tiempo_transcurrido < 31:
+                    sleep_time = 30 - tiempo_transcurrido
                     print(f"Rate limit alcanzado. Durmiendo por {sleep_time:.2f} segundos...")
                     time.sleep(sleep_time)
-                llamadas = 0  # Reiniciar el contador de llamadas
-                inicio_tiempo = time.time()  # Reiniciar el tiempo de inicio
+                llamadas = 0
+                inicio_tiempo = time.time()
 
             # Realizar la solicitud
             url = f'https://api.spotify.com/v1/playlists/{playlist_id}/tracks?fields=items.track(artists.name,artists.id),next&limit=50&additional_types=track'
             response = requests.get(url, headers={"Authorization": f"Bearer {token}"})
-            llamadas += 1  # Incrementar el contador de llamadas
+            llamadas += 1
 
-            # Manejo de la respuesta
+            # Manejo de respuestas
             if response.status_code == 200:
                 canciones = response.json()
                 while canciones:
                     for cancion in canciones["items"]:
                         track = cancion.get("track")
-                        if track and "artists" in track:  # Verificar si hay datos de artistas
+                        if track and "artists" in track:
                             for artist in track["artists"]:
                                 if artist["id"] not in dictio_artistas:
-                                    # Agregar al diccionario de artistas únicos
                                     dictio_artistas[artist["id"]] = artist["name"]
-                    # Verificar si hay más páginas
+                    # Procesar la siguiente página
                     if canciones["next"]:
-                        token = request_token(silent=True)  # Obtener un nuevo token
                         response = requests.get(canciones["next"], headers={"Authorization": f"Bearer {token}"})
-                        llamadas += 1  # Incrementar el contador de llamadas
-                        canciones = response.json()
+                        llamadas += 1
+                        if response.status_code == 200:
+                            canciones = response.json()
+                        elif response.status_code == 429:
+                            retry_after = int(response.headers.get("Retry-After", 1))
+                            print(f"Rate limit alcanzado. Esperando {retry_after} segundos...")
+                            time.sleep(retry_after)
+                            continue
+                        else:
+                            print(f"Error al procesar la siguiente página. Código: {response.status_code}")
+                            canciones = None
                     else:
                         canciones = None
+                break  # Salir del loop para esta playlist
             elif response.status_code == 429:  # Rate limit alcanzado
                 retry_after = int(response.headers.get("Retry-After", 1))
                 print(f"Rate limit alcanzado. Esperando {retry_after} segundos...")
                 time.sleep(retry_after)
-                token = request_token(silent=True)  # Obtener un nuevo token
-            else:
-                print(f"Error al procesar la playlist {playlist_id}. Código de estado: {response.status_code}")
-                continue
-        return dictio_artistas
+            elif response.status_code == 401:  # Token expirado o inválido
+                print("Token expirado o inválido. Renovando token...")
+                token = request_token(silent=True)
+            else:  # Otros errores
+                print(f"Error al procesar la playlist {playlist_id}. Código: {response.status_code}")
+                break
+
+    return dictio_artistas
+
 
 
 # def obtener_artistas(sp, lista_ids_playlists):
