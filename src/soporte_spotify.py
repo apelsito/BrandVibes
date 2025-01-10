@@ -79,7 +79,7 @@ import os
 import base64
 import requests
 
-def request_token():
+def request_token(silent=False):
     """
     Solicita un token de acceso a Spotify utilizando el flujo Client Credentials.
     
@@ -111,7 +111,8 @@ def request_token():
 
     if response.status_code == 200:
         access_token = response.json()["access_token"]
-        print("Token obtenido con éxito")
+        if not silent:
+            print("Token obtenido con éxito")
         return access_token
     else:
         error_message = response.json().get("error_description", "Error desconocido")
@@ -218,19 +219,19 @@ def obtener_artistas(token, lista_ids_playlists):
     """
     dictio_artistas = {}  # Para mantener un registro de artistas únicos
     llamadas = 0  # Contador de llamadas a la API
-    inicio_tiempo = time.time()  # Tiempo de inicio para controlar el rate limit
+    inicio_tiempo = time()  # Tiempo de inicio para controlar el rate limit
 
     for playlist_id in lista_ids_playlists:
         while True:  # Loop para manejar errores y reintentos
             # Controlar el rate limit
             if llamadas >= 50:
-                tiempo_transcurrido = time.time() - inicio_tiempo
+                tiempo_transcurrido = time() - inicio_tiempo
                 if tiempo_transcurrido < 31:
                     sleep_time = 30 - tiempo_transcurrido
                     print(f"Rate limit alcanzado. Durmiendo por {sleep_time:.2f} segundos...")
-                    time.sleep(sleep_time)
+                    sleep(sleep_time)
                 llamadas = 0
-                inicio_tiempo = time.time()
+                inicio_tiempo = time()
 
             # Realizar la solicitud
             url = f'https://api.spotify.com/v1/playlists/{playlist_id}/tracks?fields=items.track(artists.name,artists.id),next&limit=50&additional_types=track'
@@ -256,7 +257,7 @@ def obtener_artistas(token, lista_ids_playlists):
                         elif response.status_code == 429:
                             retry_after = int(response.headers.get("Retry-After", 1))
                             print(f"Rate limit alcanzado. Esperando {retry_after} segundos...")
-                            time.sleep(retry_after)
+                            sleep(retry_after)
                             continue
                         else:
                             print(f"Error al procesar la siguiente página. Código: {response.status_code}")
@@ -267,7 +268,7 @@ def obtener_artistas(token, lista_ids_playlists):
             elif response.status_code == 429:  # Rate limit alcanzado
                 retry_after = int(response.headers.get("Retry-After", 1))
                 print(f"Rate limit alcanzado. Esperando {retry_after} segundos...")
-                time.sleep(retry_after)
+                sleep(retry_after)
             elif response.status_code == 401:  # Token expirado o inválido
                 print("Token expirado o inválido. Renovando token...")
                 token = request_token(silent=True)
