@@ -221,7 +221,7 @@ def obtener_artistas(token, lista_ids_playlists):
     llamadas = 0  # Contador de llamadas a la API
     inicio_tiempo = time()  # Tiempo de inicio para controlar el rate limit
 
-    for playlist_id in lista_ids_playlists:
+    for playlist_id in list(lista_ids_playlists):
         while True:  # Loop para manejar errores y reintentos
             # Controlar el rate limit
             if llamadas >= 50:
