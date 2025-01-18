@@ -278,43 +278,60 @@ def obtener_artistas(token, lista_ids_playlists):
 
     return dictio_artistas
 
+def obtener_urls(dictio_artistas_unicos):
+    lista_urls = []
+    ids_artistas = list(dictio_artistas_unicos[0].keys())
+    
+    # Dividir en fragmentos de 50
+    for dividir in tqdm(range(0, len(ids_artistas), 50),desc="Generando Urls"):
+        chunk = ids_artistas[dividir:dividir + 50]
 
+        url = f"https://api.spotify.com/v1/artists?ids={','.join(chunk)}"
+        lista_urls.append(url)
 
-# def obtener_artistas(sp, lista_ids_playlists):
-#     """
-#     Usa `requests` para verificar la disponibilidad y `spotipy` para procesar los datos.
-#     """
-#     dictio_artistas = {}
-#     token = request_token(silent=True)  # Obtener el token una sola vez
+    return lista_urls
 
-#     for playlist_id in lista_ids_playlists:
-#         # Construir la URL para verificar con `requests`
-#         url = f'https://api.spotify.com/v1/playlists/010Cm0KVT0lW8pqA2cGDN8/tracks?fields=items.track%28artists.name%2Cartists.id%29%2Cnext&limit=50&additional_types=track'
-#         response = requests.get(url, headers={"Authorization": f"Bearer {token}"})
-#         # Verificar disponibilidad con `requests`
-#         if not request_segura(url, token):
-#             print(f"No se pudo procesar la playlist {playlist_id}.")
-#             continue
+def obtener_generos(token, dictio_artistas_unicos):
+    lista_urls = obtener_urls(dictio_artistas_unicos)
+    dictio_generos = {}  # Diccionario para almacenar géneros y su conteo
+    llamadas = 0  # Contador de llamadas a la API
+    inicio_tiempo = time()  # Tiempo inicial para manejar el rate limit
 
-#         # Usar `spotipy` para procesar las canciones
-#         canciones = sp.playlist_tracks(
-#             playlist_id, 
-#             fields="items.track(artists.name,artists.id),next", 
-#             additional_types=("track",)
-#         )
+    for url in tqdm(lista_urls,desc="Realizando Petición a Spotify"):
+        while True:  # Loop para manejar reintentos en caso de errores
+            # Controlar el rate limit
+            if llamadas >= 50:
+                tiempo_transcurrido = time() - inicio_tiempo
+                if tiempo_transcurrido < 30:
+                    sleep_time = 30 - tiempo_transcurrido
+                    print(f"Rate limit alcanzado. Esperando {sleep_time:.2f} segundos...")
+                    sleep(sleep_time)
+                llamadas = 0
+                inicio_tiempo = time()
 
-#         while canciones:
-#             # Sacar canciones de la página actual
-#             for cancion in canciones["items"]:
-#                 track = cancion["track"]
-#                 if track and "artists" in track: # Verficar que la canción no sea None
-#                     for artist in track["artists"]:
-#                         if artist["id"] not in dictio_artistas:
-#                             dictio_artistas[artist["id"]] = artist["name"]
+            # Realizar la petición
+            response = requests.get(url, headers={"Authorization": f"Bearer {token}"})
+            llamadas += 1
 
-#             # Verificar si hay más páginas
-#             if canciones["next"]:
-#                 canciones = sp.next(canciones)
-#             else:
-#                 canciones = None
-#     return dictio_artistas
+            if response.status_code == 200:
+                # Procesar la respuesta exitosa
+                artistas = response.json()
+                for artista in artistas["artists"]:
+                    if artista and artista.get("genres"):
+                        for genero in artista["genres"]:
+                            dictio_generos[genero] = dictio_generos.get(genero, 0) + 1
+                break  # Salir del loop una vez que se procesa la URL
+            elif response.status_code == 429:  # Manejar Rate Limit
+                retry_after = int(response.headers.get("Retry-After", 1))
+                print(f"Rate limit alcanzado. Esperando {retry_after} segundos...")
+                sleep(retry_after)
+                continue  # Reintentar después de la espera
+            elif response.status_code == 401:  # Manejar token expirado
+                print("Token expirado o inválido. Por favor, renueva tu token.")
+                return None  # Salir y notificar que el token no es válido
+            else:  # Otros errores
+                print(f"Error al procesar la URL: {response.status_code} - {response.text}")
+                break  # Salir del loop en caso de error no recuperable
+
+    return dictio_generos
+
