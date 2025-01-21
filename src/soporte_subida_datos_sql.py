@@ -1,8 +1,24 @@
+# Modificar el sistema de rutas para permitir importar módulos desde el directorio padre
+# --------------------------------
 import sys 
 sys.path.append("../")
+
+# Importar el módulo personalizado para manejo de bases de datos SQL
+# --------------------------------
 import src.soporte_sql as sql
+
+# Importar la biblioteca pandas para manipulación y análisis de datos tabulares
+# --------------------------------
 import pandas as pd
+
+# Importar la biblioteca JSON para trabajar con datos en formato JSON
+# --------------------------------
 import json
+
+# Importar la biblioteca AST para convertir cadenas en estructuras de datos Python
+# --------------------------------
+import ast
+
 
 def obtener_tabla_artistas(artistas_df,brand_id = 0, ruta_csv = "../datos/02 Base de Datos/tempsave.csv"):
     """
@@ -478,3 +494,138 @@ def subir_main_genres(main_generos_df):
     conexion = sql.conectar_bd()
     query = '''INSERT INTO main_genres(genre_name,number_of_appearances,brand_id) VALUES (%s,%s,%s)'''
     sql.insertar_muchos_datos(conexion,query,sql.generar_tupla(main_generos_df))
+
+def obtener_subgenres(subgeneros_df, brand_id = 0, ruta_csv = "../datos/02 Base de Datos/tempsave_subgenre.csv"):
+    """
+    Esta Función espera el df que obtienes de `mapear_main_genres()`:
+    -----------
+    Procesa y genera un DataFrame con subgéneros asociados a géneros principales y sus identificadores, como paso intermedio para subir subgéneros a la base de datos.
+
+    Parámetros:
+    -----------
+    subgeneros_df : pandas.DataFrame
+        DataFrame que contiene la información de los subgéneros. Debe ser el resultado de `mapear_main_genres()` 
+        y contener las columnas:
+        - 'subgenre_name': Nombre del subgénero.
+        - 'number_of_appearances': Número de apariciones del subgénero.
+        - 'genre': Nombre del género principal mapeado.
+        - 'brand_id': Identificador de la marca asociada.
+
+    brand_id : int, opcional
+        Identificador de la marca asociada a los subgéneros.
+        El valor predeterminado es 0.
+
+    ruta_csv : str, opcional
+        Ruta donde se guardará un archivo CSV con la información procesada de los subgéneros.
+        El valor predeterminado es "../datos/02 Base de Datos/tempsave_subgenre.csv".
+
+    Retorna:
+    --------
+    subgeneros : pandas.DataFrame
+        DataFrame con las columnas:
+        - 'subgenre_name': Nombre del subgénero.
+        - 'number_of_appearances': Número total de apariciones del subgénero.
+        - 'main_genre': Identificador del género principal asociado.
+        - 'brand_id': Identificador de la marca asociada.
+
+    Proceso:
+    --------
+    1. Comprueba si el `brand_id` existe en la base de datos:
+    - Se conecta a la tabla `brands` y verifica si el `brand_id` está presente.
+    - Si no está, imprime un mensaje con los IDs disponibles y retorna un display de la tabla.
+
+    2. Filtra y renombra columnas del DataFrame `subgeneros_df`:
+    - Renombra la columna 'genre' a 'genre_name' para que coincida con la base de datos.
+
+    3. Obtiene los géneros principales de la base de datos:
+    - Se conecta a la tabla `main_genres` y filtra los registros por el `brand_id`.
+    - Obtiene las columnas 'genre_name' y su identificador asociado ('id').
+
+    4. Realiza un merge entre subgéneros y géneros principales:
+    - Combina los datos para asociar cada subgénero con el identificador de su género principal.
+
+    5. Ajusta las columnas y guarda el DataFrame en un archivo CSV:
+    - Filtra las columnas necesarias y guarda el resultado en la ruta especificada.
+
+    6. Muestra mensajes para:
+    - Indicar que el archivo se generó correctamente.
+    - Recomendar revisar el archivo antes de continuar.
+
+    Notas:
+    ------
+    - Esta función espera como entrada el DataFrame generado por `mapear_main_genres()`.
+    - Asegúrate de que los datos de la tabla `main_genres` en la base de datos estén completos antes de ejecutar esta función.
+    - Este paso es esencial para mapear los subgéneros a los identificadores de los géneros principales en la base de datos.
+
+    Siguientes pasos:
+    -----------------
+    1. Ejecutar `mapear_main_genres()` para generar el DataFrame inicial con los géneros mapeados.
+    2. Verificar y procesar el DataFrame con esta función.
+    3. Subir los datos procesados de subgéneros a la base de datos.
+    """
+
+    conexion = sql.conectar_bd()
+    query = ''' SELECT * FROM brands'''
+    df = sql.consulta_sql(conexion, query)
+    df = df[["id","name"]]
+    check = df["id"].tolist()
+    if brand_id not in check:
+        print("El id de la marca no existe")
+        print("Los ids de las marcas son:")
+        return display(df)
+    
+    subgeneros = subgeneros_df[["subgenre_name","number_of_appearances","genre","brand_id"]]
+    subgeneros.rename(columns={"genre":"genre_name"},inplace=True)
+
+    # LLamamos a la tabla de géneros principales
+    conexion = sql.conectar_bd()
+    query = f''' SELECT * FROM main_genres WHERE brand_id = {brand_id}'''
+    main_genres_bd = sql.consulta_sql(conexion, query)
+    main_genres_bd = main_genres_bd[["genre_name","id"]]
+    
+    #  Realizamos un merge para obtener el id de los géneros principales
+    subgeneros = subgeneros.merge(main_genres_bd,how="left",on="genre_name")
+    subgeneros = subgeneros[["subgenre_name","number_of_appearances","id","brand_id"]]
+    subgeneros.rename(columns={"id":"main_genre"},inplace=True)
+    # Guardar en csv
+    subgeneros.to_csv(ruta_csv,index=False)
+    print("Revisa la tabla antes de subirla!")
+    print("Usa la funcion subir_main_genres(main_generos) para subir los datos")
+    return subgeneros
+
+def subir_subgenres(subgeneros_df):
+    """
+    Sube los datos de subgéneros a la base de datos.
+
+    Parámetros:
+    -----------
+    subgeneros_df : pandas.DataFrame
+        DataFrame que contiene la información de los subgéneros. Debe incluir las columnas:
+        - 'subgenre_name': Nombre del subgénero.
+        - 'number_of_appearances': Número total de apariciones del subgénero.
+        - 'main_genre': Identificador del género principal asociado.
+        - 'brand_id': Identificador de la marca asociada.
+
+    Proceso:
+    --------
+    1. Establece una conexión con la base de datos utilizando la función `sql.conectar_bd()`.
+    2. Define la consulta SQL para insertar múltiples registros en la tabla `subgenres`.
+    3. Convierte el DataFrame en una tupla de valores utilizando `sql.generar_tupla()`.
+    4. Inserta los datos en la tabla `subgenres` de la base de datos utilizando 
+    `sql.insertar_muchos_datos()`.
+
+    Notas:
+    ------
+    - Asegúrate de que el DataFrame `subgeneros_df` no contiene valores nulos antes de ejecutar esta función.
+    - La tabla `subgenres` en la base de datos debe estar configurada con las columnas adecuadas para que la inserción sea exitosa.
+    - Esta función debe ejecutarse después de procesar los subgéneros con la función `obtener_subgenres()`.
+
+    Siguientes pasos:
+    -----------------
+    1. Ejecutar `obtener_subgenres()` para procesar y preparar los datos de subgéneros.
+    2. Usar esta función para insertar los datos procesados en la base de datos.
+    """
+
+    conexion = sql.conectar_bd()
+    query = '''INSERT INTO subgenres(subgenre_name,number_of_appearances,main_genre,brand_id) VALUES (%s,%s,%s,%s)'''
+    sql.insertar_muchos_datos(conexion,query,sql.generar_tupla(subgeneros_df))

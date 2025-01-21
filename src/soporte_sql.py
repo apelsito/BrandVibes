@@ -1,23 +1,76 @@
+# Importar psycopg2 para la conexión y manejo de bases de datos PostgreSQL
+# -----------------------------------------------------------------------
 import psycopg2
-from psycopg2 import OperationalError, errorcodes, errors  # Manejo de errores específicos de psycopg2 para controlar excepciones
+
+# Importar manejo de errores específicos de psycopg2
+# -----------------------------------------------------------------------
+from psycopg2 import OperationalError, errorcodes, errors  
+# Permite capturar y manejar errores como fallos de conexión, errores en las consultas, etc.
+
+# Importar dotenv para cargar variables de entorno desde un archivo .env
+# -----------------------------------------------------------------------
 from dotenv import load_dotenv
+
+# Importar os para acceder a variables de entorno del sistema
+# -----------------------------------------------------------------------
 import os
+
+# Importar pandas para manipulación y análisis de datos tabulares
+# -----------------------------------------------------------------------
 import pandas as pd
+
 # Ignorar warnings
 # -----------------------------------------------------------------------
 import warnings
-warnings.filterwarnings("ignore")                 # Suprime advertencias, manteniendo la salida de consola más limpia
+warnings.filterwarnings("ignore")  # Suprime advertencias, manteniendo la salida de consola más limpia.
 
-# Load environment variables from .env
+# Cargar las variables de entorno desde un archivo .env
+# -----------------------------------------------------------------------
 load_dotenv()
 
-USER = os.getenv("dbuser")
-PASSWORD = os.getenv("dbpassword")
-HOST = os.getenv("dbhost")
-PORT = os.getenv("dbport")
-DBNAME = os.getenv("dbname")
+# Obtener credenciales de la base de datos desde las variables de entorno
+# -----------------------------------------------------------------------
+USER = os.getenv("dbuser")          # Usuario de la base de datos
+PASSWORD = os.getenv("dbpassword")  # Contraseña del usuario
+HOST = os.getenv("dbhost")          # Dirección del servidor de la base de datos
+PORT = os.getenv("dbport")          # Puerto del servidor de la base de datos
+DBNAME = os.getenv("dbname")        # Nombre de la base de datos
+
 
 def conectar_bd():
+    """
+    Establece una conexión con la base de datos PostgreSQL.
+
+    Retorna:
+    --------
+    conexion : psycopg2.extensions.connection
+        Objeto de conexión a la base de datos, si la conexión es exitosa.
+
+    Excepciones:
+    ------------
+    - OperationalError:
+        - Si ocurre un error relacionado con la conexión a la base de datos.
+        - Casos específicos manejados:
+            - errorcodes.INVALID_PASSWORD: La contraseña proporcionada es incorrecta.
+            - errorcodes.CONNECTION_EXCEPTION: Error general de conexión a la base de datos.
+
+    Proceso:
+    --------
+    1. Intenta establecer una conexión con la base de datos PostgreSQL utilizando las credenciales 
+    almacenadas en las variables de entorno (`USER`, `PASSWORD`, `HOST`, `PORT`, `DBNAME`).
+    2. Si la conexión es exitosa:
+        - Imprime un mensaje indicando que la conexión fue establecida.
+        - Retorna el objeto de conexión.
+    3. Si ocurre un error de conexión:
+        - Detecta el tipo de error y muestra un mensaje informativo.
+        - En caso de un error no específico, muestra un mensaje genérico con el código del error.
+
+    Notas:
+    ------
+    - Asegúrate de que las credenciales correctas están definidas en las variables de entorno.
+    - La base de datos PostgreSQL debe estar en ejecución y accesible desde la máquina que ejecuta esta función.
+    """
+
     # Connect to the database
     try:
         conexion = psycopg2.connect(
@@ -39,6 +92,36 @@ def conectar_bd():
             print(f"Ocurrió el error {e}")
 
 def modificar_bd(conexion, query):
+    """
+    Ejecuta una consulta SQL para modificar la base de datos PostgreSQL.
+
+    Parámetros:
+    -----------
+    conexion : psycopg2.extensions.connection
+        Objeto de conexión a la base de datos previamente establecido.
+
+    query : str
+        Consulta SQL que realiza modificaciones en la base de datos, como `INSERT`, `UPDATE` o `DELETE`.
+
+    Proceso:
+    --------
+    1. Crea un cursor a partir de la conexión proporcionada.
+    2. Ejecuta la consulta SQL especificada en el parámetro `query`.
+    3. Confirma los cambios en la base de datos utilizando `commit()`.
+    4. Cierra el cursor y la conexión para liberar recursos.
+    5. Imprime un mensaje de éxito si la operación se realizó correctamente.
+
+    Excepciones:
+    ------------
+    - Captura cualquier excepción que ocurra durante la ejecución de la consulta o los procesos relacionados:
+        - Si ocurre un error, imprime un mensaje indicando que no se pudo realizar la operación, junto con el error específico.
+
+    Notas:
+    ------
+    - Asegúrate de que la conexión esté activa y que el usuario tenga los permisos adecuados para realizar la operación.
+    - Esta función debe ser utilizada con consultas que modifican la base de datos. Para consultas de solo lectura (como `SELECT`), utiliza una función diferente.
+    """
+
     try:
         cursor = conexion.cursor()
         cursor.execute(query)
@@ -50,6 +133,43 @@ def modificar_bd(conexion, query):
         print("No se ha podido realizar la operación:", e)
     
 def insertar_muchos_datos(conexion,query,tupla):
+    """
+    Inserta múltiples registros en la base de datos PostgreSQL utilizando una consulta SQL parametrizada.
+
+    Parámetros:
+    -----------
+    conexion : psycopg2.extensions.connection
+        Objeto de conexión a la base de datos previamente establecido.
+
+    query : str
+        Consulta SQL parametrizada para la inserción de datos. Debe contener placeholders (%s) 
+        para los valores a insertar, por ejemplo:
+        `INSERT INTO tabla (columna1, columna2) VALUES (%s, %s)`.
+
+    tupla : list[tuple]
+        Lista de tuplas donde cada tupla representa un registro a insertar en la base de datos.
+        Ejemplo: [(valor1, valor2), (valor3, valor4), ...]
+
+    Proceso:
+    --------
+    1. Crea un cursor a partir de la conexión proporcionada.
+    2. Ejecuta la consulta SQL para insertar múltiples registros utilizando `executemany()` con 
+    la consulta y la lista de tuplas.
+    3. Confirma los cambios en la base de datos utilizando `commit()`.
+    4. Cierra el cursor y la conexión para liberar recursos.
+    5. Imprime un mensaje de éxito si la operación se realizó correctamente.
+
+    Excepciones:
+    ------------
+    - Captura cualquier excepción que ocurra durante la ejecución de la consulta o los procesos relacionados:
+        - Si ocurre un error, imprime un mensaje indicando que no se pudo realizar la operación, junto con el error específico.
+
+    Notas:
+    ------
+    - Asegúrate de que la conexión esté activa y que el usuario tenga los permisos adecuados para realizar la operación.
+    - Verifica que la estructura de la lista de tuplas coincide con los placeholders definidos en la consulta SQL.
+    - Es una función útil para insertar grandes volúmenes de datos de manera eficiente.
+    """
     try:
         cursor = conexion.cursor()
         cursor.executemany(query,tupla)
