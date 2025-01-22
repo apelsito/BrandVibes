@@ -432,6 +432,78 @@ def obtener_playlists(sp, user_id):
             playlists = None
     return dictio
 
+def obtener_algunas_playlists(sp, user_id):
+    """
+    Obtiene todas las playlists públicas de un usuario de Spotify.
+
+    Parámetros:
+    -----------
+    sp : spotipy.Spotify
+        Objeto autenticado de la API de Spotify, utilizado para realizar solicitudes de datos de usuario.
+
+    user_id : str
+        Identificador único del usuario de Spotify cuyas playlists se desean obtener.
+
+    Retorna:
+    --------
+    dictio : dict
+        Un diccionario donde las claves son los nombres de las playlists y los valores son los IDs de las playlists.
+
+    O:
+    ---
+    str
+        Retorna "No playlists" si el usuario no tiene playlists públicas disponibles.
+
+    Proceso:
+    --------
+    1. **Solicitar playlists del usuario:**
+    - Utiliza el método `sp.user_playlists(user_id)` para obtener las playlists públicas del usuario.
+
+    2. **Manejar usuarios sin playlists:**
+    - Si el campo `items` en la respuesta está vacío, retorna "No playlists".
+
+    3. **Iterar y manejar paginación:**
+    - Recorre las playlists disponibles en la respuesta.
+    - Agrega el nombre (`name`) y el ID (`id`) de cada playlist al diccionario `dictio`.
+    - Si existen más páginas de resultados (`next` no es `None`), realiza la siguiente solicitud utilizando `sp.next(playlists)`.
+
+    4. **Finalizar:**
+    - Cuando no queden más páginas de playlists, retorna el diccionario con los datos.
+
+    Notas:
+    ------
+    - **Playlists públicas:** Este método solo accede a playlists públicas del usuario.
+    - **Manejo de paginación:** La API de Spotify devuelve las playlists en páginas (paginación), por lo que es necesario iterar sobre todas las páginas para obtener todos los resultados.
+
+    Ejemplo de uso:
+    ---------------
+    ```python
+    playlists_dict = obtener_playlists(sp, "usuario123")
+    print(playlists_dict)
+    """
+    playlists = sp.user_playlists(user_id)
+    dictio = {}
+    count = 0  # Contador para limitar a 10 playlists
+
+    if not playlists['items']:
+        return "No playlists"
+
+    # Iterar sobre todas las playlists (manejar paginación)
+    while playlists and count < 10:
+        for playlist in playlists['items']:
+            if count >= 10:
+                break  # Detener si ya se tienen 10 playlists
+            dictio[playlist["name"]] = playlist["id"]
+            count += 1
+
+        # Verificar si hay más páginas de playlists
+        if playlists['next'] and count < 10:
+            playlists = sp.next(playlists)
+        else:
+            playlists = None
+    
+    return dictio
+
 # def request_segura(url, token):
 #     """
 #     Verifica si la API de Spotify está disponible.
