@@ -19,6 +19,153 @@ import json
 # --------------------------------
 import ast
 
+def obtener_tabla_followers(followers_df, brand_id = 0):
+    conexion = sql.conectar_bd()
+    query = ''' SELECT * FROM brands'''
+    df = sql.consulta_sql(conexion, query)
+    df = df[["id","name"]]
+    check = df["id"].tolist()
+    if brand_id not in check:
+        print("El id de la marca no existe")
+        print("Los ids de las marcas son:")
+        return display(df)
+    
+    followers_df["brand"] = brand_id
+    followers_df = followers_df[["username","user_id","brand"]]
+    return followers_df
+
+def subir_followers(followers_df):
+    conexion = sql.conectar_bd()
+    query = '''INSERT INTO followers(username,user_id,brand_id) VALUES (%s,%s,%s)'''
+    sql.insertar_muchos_datos(conexion,query,sql.generar_tupla(followers_df))
+
+def obtener_tabla_playlists(playlists_df, brand_id = 0):
+    conexion = sql.conectar_bd()
+    query = ''' SELECT * FROM brands'''
+    df = sql.consulta_sql(conexion, query)
+    df = df[["id","name"]]
+    check = df["id"].tolist()
+    if brand_id not in check:
+        print("El id de la marca no existe")
+        print("Los ids de las marcas son:")
+        return display(df)
+    
+    # Obtenemos el id de los usuarios desde la base de datos
+    conexion = sql.conectar_bd()
+    query = '''SELECT * FROM followers'''
+    df_users = sql.consulta_sql(conexion,query)
+    df_users = df_users[["id","user_id","username"]]
+    df_users.sample()
+    
+    # Realizamos merge y convertimos a diccionario las playlists
+    unir = pd.merge(left=df_users,right=playlists_df,on="user_id")
+    playlists = unir[["id","playlists"]]
+    playlists["playlists"] = playlists["playlists"].apply(ast.literal_eval)
+
+    # Generamos la tabla de playlists
+    id_list = []
+    playlist_names = []
+    playlist_ids = []
+
+    for index, fila in playlists.iterrows():
+        user_id = fila["id"]
+        playlist = fila["playlists"]
+
+        for playlist_name, playlist_id in playlist.items():
+            id_list.append(user_id)
+            playlist_names.append(playlist_name)
+            playlist_ids.append(playlist_id)
+
+    playlists =  pd.DataFrame({
+        "id" : id_list,
+        "playlist_name" : playlist_names,
+        "playlist_id" : playlist_ids
+    })
+    playlists = playlists[["playlist_name","playlist_id","id"]]
+    return playlists
+
+def subir_playlists(playlists_df):
+    conexion = sql.conectar_bd()
+    query = '''INSERT INTO playlists(playlist_name,playlist_id,follower_id) VALUES (%s,%s,%s)'''
+    sql.insertar_muchos_datos(conexion,query,sql.generar_tupla(playlists_df))
+
+def obtener_tabla_reduced_playlists(playlists_df, brand_id = 0):
+    conexion = sql.conectar_bd()
+    query = ''' SELECT * FROM brands'''
+    df = sql.consulta_sql(conexion, query)
+    df = df[["id","name"]]
+    check = df["id"].tolist()
+    if brand_id not in check:
+        print("El id de la marca no existe")
+        print("Los ids de las marcas son:")
+        return display(df)
+
+    # Convertir las cadenas de texto de la columna "playlists" a diccionarios reales
+    if type(playlists_df["playlists"][0]) == str:
+        playlists_df["playlists"] = playlists_df["playlists"].apply(ast.literal_eval)
+
+    
+    # Seleccionar columnas clave
+    playlists_df = playlists_df[["brand", "username", "user_id", "playlists"]]
+
+    # Lista para almacenar los diccionarios reducidos
+    reduced_playlists_list = []
+
+    # Iterar sobre cada diccionario en la columna "playlists"
+    for dict_item in playlists_df["playlists"]:
+        reduced_dict = {}  # Diccionario reducido
+        count = 0  # Contador para elementos procesados
+
+        # Iterar sobre los elementos del diccionario y limitar a 10
+        for key, value in dict_item.items():
+            if count < 10:
+                reduced_dict[key] = value
+                count += 1
+            else:
+                break
+        
+        # Agregar el diccionario reducido a la lista
+        reduced_playlists_list.append(reduced_dict)
+
+    # Crear la nueva columna "reduced_playlists" en el DataFrame
+    playlists_df["reduced_playlists"] = reduced_playlists_list
+    playlists_df = playlists_df[["user_id","reduced_playlists"]]
+
+    # Obtenemos el id de los usuarios haciendo una consulta a la bd
+    conexion = sql.conectar_bd()
+    query = '''SELECT * FROM followers'''
+    df_users = sql.consulta_sql(conexion,query)
+    df_users = df_users[["id","user_id","username"]]
+
+# Realizamos merge y convertimos a diccionario "playlists"
+    unir = pd.merge(left=df_users,right=playlists_df,on="user_id")
+    playlists = unir[["id","reduced_playlists"]]
+
+    id_list = []
+    playlist_names = []
+    playlist_ids = []
+
+    for _ , fila in playlists.iterrows():
+        user_id = fila["id"]
+        playlist = fila["reduced_playlists"]
+
+        for playlist_name, playlist_id in playlist.items():
+            id_list.append(user_id)
+            playlist_names.append(playlist_name)
+            playlist_ids.append(playlist_id)
+
+    playlists =  pd.DataFrame({
+        "id" : id_list,
+        "playlist_name" : playlist_names,
+        "playlist_id" : playlist_ids
+    })
+    playlists = playlists[["playlist_name","playlist_id","id"]]
+    return playlists
+
+def subir_reduced_playlists(playlists):
+    conexion = sql.conectar_bd()
+    query = '''INSERT INTO reduced_playlists(playlist_name,playlist_id,follower_id) VALUES (%s,%s,%s)'''
+    sql.insertar_muchos_datos(conexion,query,sql.generar_tupla(playlists))
 
 def obtener_tabla_artistas(artistas_df,brand_id = 0, ruta_csv = "../datos/02 Base de Datos/tempsave.csv"):
     """
@@ -130,7 +277,7 @@ def subir_artistas(artistas_df):
     query = '''INSERT INTO artists(artist_name,artist_id,brand_id) VALUES (%s,%s,%s)'''
     sql.insertar_muchos_datos(conexion,query,sql.generar_tupla(artistas_df))
 
-def obtener_ranking_artistas(ranking_df,brand_id = 0, ruta_csv = "../datos/02 Base de Datos/tempsave_ranking.csv"):
+def obtener_ranking_artistas(ranking_df,brand_id = 0, ruta_csv = "../datos/02 Base de Datos/00_tempsaves/tempsave_ranking.csv"):
     """
     Genera un DataFrame con el ranking de artistas asociados a una marca y guarda un archivo CSV temporal.
 

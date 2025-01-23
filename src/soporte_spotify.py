@@ -759,7 +759,7 @@ def obtener_generos(token, dictio_artistas_unicos):
     for url in tqdm(lista_urls,desc="Realizando Petición a Spotify"):
         while True:  # Loop para manejar reintentos en caso de errores
             # Controlar el rate limit
-            if llamadas >= 50:
+            if llamadas >= 100:
                 tiempo_transcurrido = time() - inicio_tiempo
                 if tiempo_transcurrido < 30:
                     sleep_time = 30 - tiempo_transcurrido
