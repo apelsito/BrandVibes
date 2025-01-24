@@ -18,17 +18,22 @@ supabase: Client = create_client(url, key)
 st.title("Dashboard de Seguidores 🎵")
 
 # Crear pestañas para las marcas
+# marcas = [
+#     {"id": 1, "name": "Zara"},
+#     {"id": 2, "name": "Primark"},
+#     {"id": 3, "name": "Nike"},
+#     {"id": 4, "name": "Adidas"},
+#     {"id": 5, "name": "H&M"},
+#     {"id": 6, "name": "Pull & Bear"},
+#     {"id": 7, "name": "Bershka"},
+#     {"id": 8, "name": "Stradivarius"},
+#     {"id": 9, "name": "Mango"},
+#     {"id": 10, "name": "Desigual"}
+# ]
+
 marcas = [
     {"id": 1, "name": "Zara"},
-    {"id": 2, "name": "Primark"},
-    {"id": 3, "name": "Nike"},
-    {"id": 4, "name": "Adidas"},
-    {"id": 5, "name": "H&M"},
-    {"id": 6, "name": "Pull & Bear"},
-    {"id": 7, "name": "Bershka"},
-    {"id": 8, "name": "Stradivarius"},
-    {"id": 9, "name": "Mango"},
-    {"id": 10, "name": "Desigual"}
+    {"id": 2, "name": "Primark"}
 ]
 
 # Crear las pestañas
@@ -63,3 +68,32 @@ for i, marca in enumerate(marcas):
 
         # Separador para mejorar diseño
         st.divider()
+
+         # Obtener el ranking de artistas
+        ranking_artistas = sp.obtener_ranking_artistas(supabase, brand_id)
+
+        # Separar el top 3 y el resto
+        top_3 = ranking_artistas[:3]
+        otros = ranking_artistas[3:]
+
+        # Mostrar el podio
+        st.subheader("🎤 Podio de Artistas 🎶")
+        col1, col2, col3 = st.columns(3)
+        
+        with col2:  # Primer lugar (en el centro)
+            st.markdown(f"### 🥇 {top_3[0]['artist_name']}")
+            st.markdown(f"**Apariciones:** {top_3[0]['number_of_appearances']}")
+
+        with col1:  # Segundo lugar (a la izquierda)
+            st.markdown(f"#### 🥈 {top_3[1]['artist_name']}")
+            st.markdown(f"Apariciones: {top_3[1]['number_of_appearances']}")
+
+        with col3:  # Tercer lugar (a la derecha)
+            st.markdown(f"#### 🥉 {top_3[2]['artist_name']}")
+            st.markdown(f"Apariciones: {top_3[2]['number_of_appearances']}")
+
+        # Mostrar el resto del ranking en una lista
+        st.subheader("🎧 Ranking Completo")
+        for idx, artista in enumerate(otros, start=4):  # Comenzar en el cuarto lugar
+            st.markdown(f"**{idx}. {artista['artist_name']}** - {artista['number_of_appearances']} apariciones")
+

@@ -1,4 +1,5 @@
 import os
+import streamlit as st
 import sys
 sys.path.append("../")
 from supabase import create_client, Client
@@ -44,17 +45,13 @@ def obtener_numero_playlists_reducido(supabase_credential, id_brand = 0):
         # Pasamos los ids a una lista
         lista_follower_ids = [follower['id'] for follower in followers_response]
 
-        all_playlists = []
-        limit = 1000
-        # Set the limit for each query
-        offset = 0
-        while True:
-            playlists_response = supabase_credential.table("reduced_playlists").select("*").in_("follower_id", lista_follower_ids).range(offset, offset + limit - 1).execute()
-            if playlists_response.data:
-                all_playlists.extend(playlists_response.data)  
-                # Add the retrieved playlists to the list
-                offset += limit  
-                # Move to the next set of results
-            else:
-                break
-    return len(all_playlists)
+    return len(supabase_credential.table("reduced_playlists").select("*").in_("follower_id", lista_follower_ids).execute().data)
+
+# Función para mostrar el ranking de artistas
+def obtener_ranking_artistas(supabase_credential, id_brand = 0):
+    if id_brand == 0:
+        print("No se ha especificado el id de la marca")
+    else:
+        ranking_artistas = supabase_credential.table("artists_ranking").select("artist_name", "number_of_appearances").eq("brand_id", id_brand).execute().data                              
+    return ranking_artistas
+    
