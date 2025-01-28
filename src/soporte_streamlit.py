@@ -1,4 +1,5 @@
 import os
+import pandas as pd
 import streamlit as st
 import sys
 sys.path.append("../")
@@ -47,11 +48,98 @@ def obtener_numero_playlists_reducido(supabase_credential, id_brand = 0):
 
     return len(supabase_credential.table("reduced_playlists").select("*").in_("follower_id", lista_follower_ids).execute().data)
 
-# Función para mostrar el ranking de artistas
-def obtener_ranking_artistas(supabase_credential, id_brand = 0):
+def obtener_top_artistas(supabase_credential, start = 0, end = 0, id_brand = 0):
     if id_brand == 0:
         print("No se ha especificado el id de la marca")
     else:
-        ranking_artistas = supabase_credential.table("artists_ranking").select("artist_name", "number_of_appearances").eq("brand_id", id_brand).execute().data                              
-    return ranking_artistas
+        # Primero obtenemos el id de los seguidores de la marca 
+        ranking_response = supabase_credential.table('artists_ranking').select('artist_name','number_of_appearances').eq('brand_id', id_brand).range(start, end).execute().data
+
+        return ranking_response
     
+def obtener_resto_artistas(supabase_credential, start = 0, end = 0, id_brand = 0):
+    if id_brand == 0:
+        print("No se ha especificado el id de la marca")
+    else:
+        # Primero obtenemos el id de los seguidores de la marca 
+        ranking_response = supabase_credential.table('artists_ranking').select('artist_name','number_of_appearances').eq('brand_id', 1).range(start,end).execute().data
+        # Ahora generamos el dataframe
+        artists_names = []
+        artists_appearances = []
+        for dictio in ranking_response:
+            artists_names.append(dictio["artist_name"])
+            artists_appearances.append(dictio["number_of_appearances"])
+        
+        df = pd.DataFrame({
+            "Artista": artists_names,
+            "Cantidad de escuchas" : artists_appearances
+        })
+        # Iniciamos el index en start, para que empi
+        df.index = df.index + start + 1
+        df.reset_index(inplace=True)
+        df.rename(columns = {'index':'Ranking'}, inplace = True)
+        return df
+    
+def obtener_top_generos(supabase_credential, start = 0, end = 0, id_brand = 0):
+    if id_brand == 0:
+        print("No se ha especificado el id de la marca")
+    else:
+        # Primero obtenemos el id de los seguidores de la marca 
+        ranking_response = supabase_credential.table('main_genres').select('genre_name','number_of_appearances').eq('brand_id', id_brand).range(start, end).execute().data
+        
+        return ranking_response
+    
+def obtener_resto_generos(supabase_credential, start = 0, end = 0, id_brand = 0):
+    if id_brand == 0:
+        print("No se ha especificado el id de la marca")
+    else:
+        # Primero obtenemos el id de los seguidores de la marca 
+        ranking_response = supabase_credential.table('main_genres').select('genre_name','number_of_appearances').eq('brand_id', id_brand).range(start, end).execute().data
+        # Ahora generamos el dataframe
+        genre_names = []
+        genre_appearances = []
+        for dictio in ranking_response:
+            genre_names.append(dictio["genre_name"])
+            genre_appearances.append(dictio["number_of_appearances"])
+        
+        df = pd.DataFrame({
+            "Género": genre_names,
+            "Cantidad de escuchas" : genre_appearances
+        })
+        # Iniciamos el index en start, para que empi
+        df.index = df.index + start + 1
+        df.reset_index(inplace=True)
+        df.rename(columns = {'index':'Ranking'}, inplace = True)
+        return df
+    
+def obtener_top_subgeneros(supabase_credential, start = 0, end = 0, id_brand = 0):
+    if id_brand == 0:
+        print("No se ha especificado el id de la marca")
+    else:
+        # Primero obtenemos el id de los seguidores de la marca 
+        ranking_response = supabase_credential.table('subgenres').select('subgenre_name','number_of_appearances').eq('brand_id', id_brand).range(start, end).execute().data
+
+        return ranking_response
+    
+def obtener_resto_subgeneros(supabase_credential, start = 0, end = 0, id_brand = 0):
+    if id_brand == 0:
+        print("No se ha especificado el id de la marca")
+    else:
+        # Primero obtenemos el id de los seguidores de la marca 
+        ranking_response = supabase_credential.table('subgenres').select('subgenre_name','number_of_appearances').eq('brand_id', id_brand).range(start, end).execute().data
+        # Ahora generamos el dataframe
+        subgenre_names = []
+        subgenre_appearances = []
+        for dictio in ranking_response:
+            subgenre_names.append(dictio["subgenre_name"])
+            subgenre_appearances.append(dictio["number_of_appearances"])
+        
+        df = pd.DataFrame({
+            "Subgénero": subgenre_names,
+            "Cantidad de escuchas" : subgenre_appearances
+        })
+        # Iniciamos el index en start, para que empi
+        df.index = df.index + start + 1
+        df.reset_index(inplace=True)
+        df.rename(columns = {'index':'Ranking'}, inplace = True)
+        return df

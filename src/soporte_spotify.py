@@ -72,10 +72,6 @@ load_dotenv(dotenv_path="../")
 from datetime import datetime  
 # Manejo de fechas y horas de forma más avanzada y con múltiples formatos.
 
-# streamlit
-# import streamlit as st  
-# Herramienta para crear dashboards interactivos, actualmente comentada en este código.
-
 def load_credentials():
     """
     Carga las credenciales de Spotify desde las variables de entorno y configura la autenticación OAuth.
@@ -118,12 +114,12 @@ def load_credentials():
     CLIENT_SECRET = os.getenv("client_Secret")
     REDIRECT_URI = "http://localhost:3000"
     SCOPES = (
-        "user-read-private user-read-email user-library-read user-library-modify "
-        "playlist-read-private playlist-read-collaborative playlist-modify-public "
-        "playlist-modify-private user-top-read user-read-recently-played "
-        "user-read-currently-playing user-read-playback-state user-modify-playback-state "
-        "streaming user-follow-read user-follow-modify app-remote-control ugc-image-upload"
-    )
+            "user-read-private user-read-email user-library-read "
+            "playlist-read-private playlist-read-collaborative "
+            "user-top-read user-read-recently-played "
+            "user-read-currently-playing user-read-playback-state "
+            "streaming user-follow-read "
+        )
 
     # Autenticación
     sp = spotipy.Spotify(auth_manager=SpotifyOAuth(
