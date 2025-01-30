@@ -142,9 +142,9 @@ for i, marca in enumerate(marcas):
                     ],
                 },
                 "dataframes": {
-                    f"🎤 Top Artistas 🔥 - {marca['name']}": sp.obtener_resto_artistas(supabase,start=3, end=999999,id_brand=brand_id),
-                    f"🎶 Top Géneros más escuchados 🎶 - {marca['name']}": sp.obtener_resto_generos(supabase,start=3, end=999999,id_brand=brand_id),
-                    f"🔥 Top Subgéneros más escuchados 🔥 - {marca['name']}": sp.obtener_resto_subgeneros(supabase,start=3, end=999999,id_brand=brand_id),
+                    f"🎤 Top Artistas 🔥 - {marca['name']}": sp.obtener_resto_artistas(supabase,start=0, end=999999,id_brand=brand_id),
+                    f"🎶 Top Géneros más escuchados 🎶 - {marca['name']}": sp.obtener_resto_generos(supabase,start=0, end=999999,id_brand=brand_id),
+                    f"🔥 Top Subgéneros más escuchados 🔥 - {marca['name']}": sp.obtener_resto_subgeneros(supabase,start=0, end=999999,id_brand=brand_id),
                 }
             }
 
@@ -187,7 +187,7 @@ for i, marca in enumerate(marcas):
 
         for col, ranking, podium in zip([col1, col2, col3], top_ranking, podium_structure):
             with col:
-                st.markdown(f'<div class="ranking-title {podium["title_class"]}">{podium["title"]}</div>', unsafe_allow_html=True)
+                st.markdown(f'<div class="ranking-title">{podium["title"]}</div>', unsafe_allow_html=True)
                 st.markdown(f"""
                     <div class="artist-card {podium['class']}">
                         <span class="medal">{podium['medal']}</span>

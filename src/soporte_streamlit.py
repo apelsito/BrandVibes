@@ -1,9 +1,7 @@
 import os
 import pandas as pd
-import streamlit as st
 import sys
 sys.path.append("../")
-from supabase import create_client, Client
 
 # Consulta a la base de datos para contar seguidores
 def obtener_numero_seguidores(supabase_credential, id_brand = 0):
@@ -53,7 +51,7 @@ def obtener_top_artistas(supabase_credential, start = 0, end = 0, id_brand = 0):
         print("No se ha especificado el id de la marca")
     else:
         # Primero obtenemos el id de los seguidores de la marca 
-        ranking_response = supabase_credential.table('artists_ranking').select('artist_name','number_of_appearances').eq('brand_id', id_brand).range(start, end).execute().data
+        ranking_response = supabase_credential.table('artists_ranking').select('artist_name','number_of_appearances').eq('brand_id', id_brand).range(start, end).order('number_of_appearances',desc=True).execute().data
 
         return ranking_response
     
@@ -62,7 +60,7 @@ def obtener_resto_artistas(supabase_credential, start = 0, end = 0, id_brand = 0
         print("No se ha especificado el id de la marca")
     else:
         # Primero obtenemos el id de los seguidores de la marca 
-        ranking_response = supabase_credential.table('artists_ranking').select('artist_name','number_of_appearances').eq('brand_id', 1).range(start,end).execute().data
+        ranking_response = supabase_credential.table('artists_ranking').select('artist_name','number_of_appearances').eq('brand_id', 1).range(start,end).order('number_of_appearances',desc=True).execute().data
         # Ahora generamos el dataframe
         artists_names = []
         artists_appearances = []
@@ -85,7 +83,7 @@ def obtener_top_generos(supabase_credential, start = 0, end = 0, id_brand = 0):
         print("No se ha especificado el id de la marca")
     else:
         # Primero obtenemos el id de los seguidores de la marca 
-        ranking_response = supabase_credential.table('main_genres').select('genre_name','number_of_appearances').eq('brand_id', id_brand).range(start, end).execute().data
+        ranking_response = supabase_credential.table('main_genres').select('genre_name','number_of_appearances').eq('brand_id', id_brand).range(start, end).order('number_of_appearances',desc=True).execute().data
         
         return ranking_response
     
@@ -94,7 +92,7 @@ def obtener_resto_generos(supabase_credential, start = 0, end = 0, id_brand = 0)
         print("No se ha especificado el id de la marca")
     else:
         # Primero obtenemos el id de los seguidores de la marca 
-        ranking_response = supabase_credential.table('main_genres').select('genre_name','number_of_appearances').eq('brand_id', id_brand).range(start, end).execute().data
+        ranking_response = supabase_credential.table('main_genres').select('genre_name','number_of_appearances').eq('brand_id', id_brand).range(start, end).order('number_of_appearances',desc=True).execute().data
         # Ahora generamos el dataframe
         genre_names = []
         genre_appearances = []
@@ -117,7 +115,7 @@ def obtener_top_subgeneros(supabase_credential, start = 0, end = 0, id_brand = 0
         print("No se ha especificado el id de la marca")
     else:
         # Primero obtenemos el id de los seguidores de la marca 
-        ranking_response = supabase_credential.table('subgenres').select('subgenre_name','number_of_appearances').eq('brand_id', id_brand).range(start, end).execute().data
+        ranking_response = supabase_credential.table('subgenres').select('subgenre_name','number_of_appearances').eq('brand_id', id_brand).range(start, end).order('number_of_appearances',desc=True).execute().data
 
         return ranking_response
     
@@ -126,7 +124,7 @@ def obtener_resto_subgeneros(supabase_credential, start = 0, end = 0, id_brand =
         print("No se ha especificado el id de la marca")
     else:
         # Primero obtenemos el id de los seguidores de la marca 
-        ranking_response = supabase_credential.table('subgenres').select('subgenre_name','number_of_appearances').eq('brand_id', id_brand).range(start, end).execute().data
+        ranking_response = supabase_credential.table('subgenres').select('subgenre_name','number_of_appearances').eq('brand_id', id_brand).range(start, end).order('number_of_appearances',desc=True).execute().data
         # Ahora generamos el dataframe
         subgenre_names = []
         subgenre_appearances = []

@@ -682,8 +682,10 @@ def obtener_urls(dictio_artistas_unicos):
     print(urls)
     """
     lista_urls = []
-    ids_artistas = list(dictio_artistas_unicos[0].keys())
-    
+    try:
+        ids_artistas = list(dictio_artistas_unicos[0].keys())
+    except:
+        ids_artistas = list(dictio_artistas_unicos.keys())
     # Dividir en fragmentos de 50
     for dividir in tqdm(range(0, len(ids_artistas), 50),desc="Generando Urls"):
         chunk = ids_artistas[dividir:dividir + 50]
