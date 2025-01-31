@@ -2,7 +2,7 @@ import streamlit as st
 import os
 import sys
 sys.path.append("../")
-import src.soporte_streamlit as sp
+import soporte_streamlit_marcas as sp
 from supabase import create_client, Client
 from dotenv import load_dotenv
 
@@ -167,7 +167,6 @@ for i, marca in enumerate(marcas):
 
         # Determinar el campo correcto (artist_name, genre_name, subgenre_name)
         ranking_type = selected_ranking.split(" ")[2]
-
 
         # ---- Mantener diseño del podio ----
         podium_structure = [

@@ -5,7 +5,7 @@ import time
 from spotipy.oauth2 import SpotifyOAuth
 import sys
 sys.path.append("../")
-import src.soporte_spotify_streamlit as spot
+import soporte_streamlit_usuarios as spot
 import os
 from dotenv import load_dotenv  
 load_dotenv()  
