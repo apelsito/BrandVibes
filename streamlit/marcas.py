@@ -2,7 +2,7 @@ import streamlit as st
 import os
 import sys
 sys.path.append("../")
-import soporte_streamlit_marcas as sp
+import src.soporte_streamlit_marcas as sp
 from supabase import create_client, Client
 from dotenv import load_dotenv
 
