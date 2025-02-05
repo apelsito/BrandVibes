@@ -740,7 +740,7 @@ def obtener_subgenres(subgeneros_df, brand_id = 0, ruta_csv = "../datos/02 Base 
     print("Usa la funcion subir_main_genres(main_generos) para subir los datos")
     return subgeneros
 
-def subir_subgenres(subgeneros_df):
+def subir_subgenres(subgeneros_df, auto_id=False):
     """
     Sube los datos de subgéneros a la base de datos.
 
@@ -772,7 +772,11 @@ def subir_subgenres(subgeneros_df):
     1. Ejecutar `obtener_subgenres()` para procesar y preparar los datos de subgéneros.
     2. Usar esta función para insertar los datos procesados en la base de datos.
     """
-
-    conexion = sql.conectar_bd()
-    query = '''INSERT INTO subgenres(subgenre_name,number_of_appearances,main_genre,brand_id) VALUES (%s,%s,%s,%s)'''
-    sql.insertar_muchos_datos(conexion,query,sql.generar_tupla(subgeneros_df))
+    if auto_id:
+        conexion = sql.conectar_bd()
+        query = '''INSERT INTO subgenres(id,subgenre_name,number_of_appearances,main_genre,brand_id) VALUES (%s,%s,%s,%s,%s)'''
+        sql.insertar_muchos_datos(conexion,query,sql.generar_tupla(subgeneros_df))
+    else:
+        conexion = sql.conectar_bd()
+        query = '''INSERT INTO subgenres(subgenre_name,number_of_appearances,main_genre,brand_id) VALUES (%s,%s,%s,%s)'''
+        sql.insertar_muchos_datos(conexion,query,sql.generar_tupla(subgeneros_df))

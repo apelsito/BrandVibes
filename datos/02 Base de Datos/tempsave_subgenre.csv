@@ -1,662 +1,665 @@
 subgenre_name,number_of_appearances,main_genre,brand_id
-musicals,992,23,2
-classical,644,27,2
-drum and bass,586,16,2
-trance,518,16,2
-lo-fi,504,18,2
-german hip hop,482,20,2
-reggae,464,22,2
-tech house,454,16,2
-worship,432,17,2
-funk,416,22,2
-dancehall,415,21,2
-celtic,415,21,2
-afro house,414,16,2
-funky house,413,16,2
-disco house,409,16,2
-gospel r&b,409,22,2
-melodic house,396,16,2
-christmas,394,23,2
-techno,389,20,2
-tropical house,382,16,2
-deep house,368,16,2
-nu disco,365,22,2
-christian,356,26,2
-chanson,351,23,2
-piano house,350,16,2
-melodic techno,342,16,2
-desi,342,21,2
-bollywood,341,21,2
-lo-fi beats,341,16,2
-french pop,339,17,2
-jazz,337,24,2
-ragga,323,21,2
-turkish pop,322,17,2
-dansktop,321,26,2
-hardstyle,320,16,2
-children's music,319,23,2
-uk garage,318,16,2
-variété française,318,21,2
-gospel,316,22,2
-eurodance,310,17,2
-german pop,306,17,2
-latin house,301,16,2
-schlager,298,17,2
-progressive house,293,16,2
-slap house,293,16,2
-country,287,26,2
-grime,284,16,2
-afrobeat,281,21,2
-lounge,281,23,2
-opera,277,27,2
-jungle,273,16,2
-liquid funk,269,16,2
-flamenco,269,19,2
-acid house,268,16,2
-tribal house,267,16,2
-brazilian funk,265,19,2
-bassline,260,16,2
-schlagerparty,258,18,2
-afrobeats,257,22,2
-chicago house,257,16,2
-k-pop,257,17,2
-chill house,256,16,2
-progressive trance,256,16,2
-mpb,255,19,2
-salsa,252,19,2
-bhangra,247,21,2
-future house,246,16,2
-reggaeton,244,19,2
-french house,238,16,2
-italo dance,231,17,2
-big room,226,16,2
-nederpop,222,17,2
-brazilian hip hop,222,20,2
-hindi pop,221,17,2
-orchestra,220,27,2
-disco,216,22,2
-funk carioca,216,20,2
-roots reggae,215,22,2
-hard house,214,16,2
-organic house,214,16,2
-bass house,213,16,2
-flamenco pop,208,21,2
-afroswing,206,21,2
-soul jazz,206,24,2
-merengue,206,19,2
-house,201,16,2
-metal,200,25,2
-bossa nova,199,24,2
-drill,195,20,2
-uk funky,195,16,2
-afropop,195,17,2
-hardcore,193,25,2
-cumbia,193,19,2
-dub,192,22,2
-christian pop,192,17,2
-lovers rock,191,18,2
-happy hardcore,191,17,2
-nu jazz,191,24,2
-disco polo,191,17,2
-italian singer-songwriter,190,18,2
-swing music,189,24,2
-eurotrance,189,16,2
-laïko,189,21,2
-lullaby,188,30,2
-christian hip hop,187,20,2
-soca,186,20,2
-samba,184,19,2
-zouk,183,19,2
-ccm,182,17,2
-pop worship,182,17,2
-nova mpb,181,19,2
-doo-wop,180,29,2
-classical piano,178,27,2
-soundtrack,178,23,2
-italian trap,178,20,2
-east coast hip hop,177,20,2
-singer-songwriter,177,28,2
-hands up,176,17,2
-folk,173,28,2
-kizomba,173,19,2
-northern soul,171,22,2
-jazz beats,171,24,2
-chamber music,170,27,2
-post-punk,168,18,2
-riddim,166,20,2
-frenchcore,166,25,2
-dubstep,165,16,2
-indie folk,165,28,2
-proto-punk,165,18,2
-big band,163,23,2
-choral,162,27,2
-latin jazz,160,24,2
-russelåter,160,21,2
-pop punk,159,18,2
-c-pop,159,17,2
-brazilian trap,159,19,2
-g-house,158,16,2
-minimal techno,157,16,2
-americana,156,26,2
-trip hop,156,17,2
-pop urbaine,156,21,2
-chillstep,155,16,2
-swedish ballads,155,18,2
-uk drill,154,17,2
-stutter house,154,16,2
-post-disco,153,22,2
-new wave,153,18,2
-neoclassical,153,27,2
-downtempo,152,16,2
-acid techno,151,16,2
-breakbeat,151,16,2
-future bass,150,16,2
-rocksteady,150,18,2
-sertanejo,150,19,2
-ambient,149,16,2
-italo disco,148,17,2
-portuguese hip hop,148,20,2
-vocal jazz,145,24,2
-epadunk,145,16,2
-arabesque,144,21,2
-hi-nrg,143,22,2
-neo soul,142,22,2
-acid jazz,141,24,2
-brazilian pop,141,17,2
-lo-fi house,140,16,2
-trap,140,20,2
-brega funk,139,17,2
-latin pop,138,17,2
-boom bap,138,20,2
-desi pop,138,17,2
-jazz rap,137,20,2
-blues,137,29,2
-electro swing,136,23,2
-underground hip hop,135,20,2
-synthpop,133,17,2
-metalcore,132,25,2
-melbourne bounce,132,16,2
-anime,132,17,2
-punk,131,18,2
-ska,131,18,2
-rock en español,131,18,2
-norwegian pop,130,17,2
-latin alternative,128,19,2
-flamenco urbano,128,19,2
-moombahton,127,16,2
-pagode,127,19,2
-edm,126,16,2
-dembow,126,19,2
-t-pop,126,17,2
-punjabi pop,125,17,2
-alternative r&b,124,22,2
-tekno,123,16,2
-melodic metal,123,25,2
-dark ambient,123,16,2
-medieval,123,27,2
-axé,123,19,2
-jazz funk,122,24,2
-power pop,122,17,2
-kuduro,122,21,2
-african gospel,122,21,2
-post-hardcore,120,18,2
-latin indie,120,19,2
-phonk,119,20,2
-turkish hip hop,119,20,2
-blues rock,118,18,2
-progressive rock,118,18,2
-música tropical,118,19,2
-glam rock,117,18,2
-indie dance,116,16,2
-alt country,116,26,2
-mandopop,116,17,2
-hardcore techno,115,17,2
-son cubano,115,19,2
-new jack swing,114,22,2
-entehno,114,21,2
-celtic rock,113,18,2
-chill beats,113,30,2
-hard techno,112,16,2
-power metal,110,25,2
-britpop,110,17,2
-quiet storm,110,22,2
-trap funk,110,16,2
-psytrance,109,16,2
-emo,109,18,2
-melodic bass,108,16,2
-dream pop,108,17,2
-garage rock,108,18,2
-timba,107,19,2
-brega,107,26,2
-southern hip hop,105,20,2
-manele,105,20,2
-baroque pop,104,17,2
-folk pop,103,28,2
-rockabilly,103,18,2
-brazilian bass,102,16,2
-electroclash,102,18,2
-latin hip hop,102,20,2
-psychedelic rock,101,18,2
-gothic country,101,28,2
-amapiano,101,16,2
-christian alternative rock,100,18,2
-motown,100,22,2
-latin rock,100,18,2
-argentine rock,100,18,2
-soul,99,22,2
-bolero,99,19,2
-bedroom pop,98,17,2
-bluegrass,98,26,2
-canzone napoletana,98,21,2
-indie,97,17,2
-christian folk,97,26,2
-k-ballad,97,22,2
-sea shanties,96,23,2
-retro soul,96,22,2
-gabber,95,16,2
-west coast hip hop,95,20,2
-calypso,95,23,2
-hyperpop,95,17,2
-acoustic pop,94,17,2
-forró,94,19,2
-piseiro,94,26,2
-cool jazz,94,24,2
-darkwave,93,18,2
-symphonic metal,92,25,2
-french jazz,92,24,2
-bachata,92,19,2
-salsa romantica,92,19,2
-arrocha,92,26,2
-europop,91,17,2
-new age,91,30,2
-indietronica,91,17,2
-j-pop,91,17,2
-cedm,91,16,2
-bounce,91,20,2
-album rock,89,18,2
-g-funk,88,20,2
-neue deutsche welle,88,18,2
-requiem,87,27,2
-sertanejo universitário,87,19,2
-trap latino,86,19,2
-surf rock,86,18,2
-afro soul,86,22,2
-fado,86,19,2
-chamber pop,86,17,2
-gqom,86,21,2
-azonto,85,21,2
-folk metal,85,25,2
-synthwave,85,17,2
-electro house,84,16,2
-idm,84,16,2
-sufi,84,21,2
-khaleeji,84,21,2
-new beat,83,17,2
-art pop,83,17,2
-traditional music,83,21,2
-k-rap,83,20,2
-hard rock,82,18,2
-hip house,82,16,2
-r&b,82,22,2
-minimalism,82,27,2
-hard bop,82,24,2
-classic rock,81,18,2
-shoegaze,81,18,2
-smooth jazz,80,24,2
-alté,80,21,2
-jazz fusion,80,24,2
-madchester,79,18,2
-mambo,79,19,2
-colombian pop,78,17,2
-comedy,78,26,2
-acid rock,78,18,2
-christian rock,77,18,2
-cold wave,76,16,2
-art rock,75,18,2
-folk rock,74,18,2
-brazilian jazz,74,24,2
-space rock,74,18,2
-thai pop,74,17,2
-heavy metal,73,25,2
-symphonic rock,73,18,2
-v-pop,73,17,2
-psychedelic pop,71,17,2
-modern blues,71,29,2
-industrial,71,18,2
-dub techno,71,30,2
-rave,70,16,2
-jangle pop,70,17,2
-roots rock,70,18,2
-free jazz,70,24,2
-urbano latino,69,19,2
-glam metal,69,25,2
-folk punk,69,28,2
-pirate metal,69,25,2
-nu metal,67,25,2
-miami bass,67,20,2
-opm,67,17,2
-tango,67,19,2
-mexican indie,67,19,2
-speed metal,66,25,2
-ebm,66,30,2
-big beat,65,16,2
-philly soul,65,22,2
-classic blues,65,29,2
-raï,65,21,2
-drift phonk,64,16,2
-alternative metal,64,25,2
-screamo,64,25,2
-funk pop,64,17,2
-neomelodico,64,17,2
-funk melody,63,26,2
-exotica,63,23,2
-anatolian rock,63,18,2
-krautrock,63,18,2
-bebop,63,24,2
-drumstep,62,16,2
-noise rock,62,18,2
-drone,62,16,2
-oyun havasi,62,17,2
-brazilian rock,62,18,2
-adult standards,61,23,2
-vinahouse,61,16,2
-ska punk,61,28,2
-indian indie,61,18,2
-dansband,61,17,2
-traditional country,60,26,2
-electronic rock,60,18,2
-avant-garde,60,27,2
-post-grunge,59,25,2
-jazz blues,59,29,2
-industrial metal,59,25,2
-spoken word,59,20,2
-punjabi hip hop,59,20,2
-qawwali,59,21,2
-cuarteto,59,19,2
-country rock,58,18,2
-industrial rock,58,18,2
-cha cha cha,58,19,2
-brazilian evangelical music,58,19,2
-horrorcore,57,20,2
-rap metal,57,25,2
-electronic,57,16,2
-hardcore hip hop,57,20,2
-christian country,57,26,2
-red dirt,57,26,2
-reggaeton mexa,57,19,2
-gangster rap,56,20,2
-ragtime,56,24,2
-medieval metal,56,25,2
-post-rock,56,18,2
-hip hop,55,20,2
-gothic metal,55,25,2
-nz reggae,55,24,2
-newgrass,55,28,2
-egyptian pop,55,17,2
-mizrahi,55,17,2
-dark trap,54,20,2
-hindi indie,54,18,2
-alternative dance,53,18,2
-hiplife,53,21,2
-indie rock,53,18,2
-trova,53,19,2
-mexican rock,53,18,2
-witch house,52,16,2
-desi hip hop,52,20,2
-freestyle,52,20,2
-nightcore,52,17,2
-chillwave,52,18,2
-devotional,52,28,2
-rkt,52,19,2
-funk de bh,51,16,2
-emo rap,50,20,2
-rock,50,18,2
-latin,50,19,2
-skate punk,50,25,2
-deathrock,50,18,2
-argentine trap,50,20,2
-indonesian pop,50,17,2
-progressive metal,50,25,2
-crunk,49,20,2
-southern rock,49,18,2
-arena rock,49,18,2
-guaracha,49,19,2
-edm trap,49,16,2
-taiwanese pop,49,17,2
-sertanejo tradicional,49,26,2
-malay,49,21,2
-hardcore punk,49,25,2
-j-rock,49,18,2
-p-pop,49,17,2
-stoner rock,48,18,2
-grunge,48,18,2
-funk consciente,48,19,2
-corrido,47,19,2
-death metal,47,25,2
-vietnam indie,47,21,2
-new rave,46,18,2
-norwegian rap,46,20,2
-space music,46,16,2
-reggae en español,46,19,2
-speedcore,46,16,2
-groove metal,46,25,2
-gufeng,46,21,2
-cloud rap,45,20,2
-soft rock,45,18,2
-jersey club,45,17,2
-texas country,45,26,2
-reggaeton chileno,45,19,2
-mexican hip hop,45,20,2
-música mexicana,45,19,2
-melodic death metal,45,25,2
-bhajan,44,30,2
-banda,44,19,2
-agronejo,44,26,2
-midwest emo,44,18,2
-karadeniz folk,43,28,2
-neoperreo,43,16,2
-bachata pop,43,19,2
-chilean trap,43,20,2
-electronica,42,16,2
-bass music,42,16,2
-latin folk,42,19,2
-city pop,41,17,2
-boogie-woogie,41,29,2
-deathcore,41,25,2
-rock and roll,40,18,2
-latin r&b,40,19,2
-turreo,40,16,2
-acoustic country,39,26,2
-pagode baiano,39,19,2
-reggae rock,39,18,2
-chinese hip hop,39,20,2
-soul blues,38,29,2
-slowcore,38,28,2
-indie jazz,38,24,2
-nueva trova,38,19,2
-emo pop,38,17,2
-neofolk,38,28,2
-ghazal,38,21,2
-country blues,37,29,2
-vaporwave,37,17,2
-ranchera,37,19,2
-seresta,37,28,2
-country hip hop,36,20,2
-cantopop,36,17,2
-tamil pop,35,17,2
-polka,35,23,2
-mariachi,34,19,2
-glitch,34,30,2
-sludge metal,34,25,2
-chilean mambo,34,21,2
-thrash metal,34,25,2
-chinese r&b,34,22,2
-corridos tumbados,34,19,2
-corridos bélicos,34,19,2
-math rock,34,18,2
-vietnamese lo-fi,34,21,2
-funk rock,33,18,2
-psychobilly,33,18,2
-gujarati garba,33,21,2
-electro corridos,33,16,2
-norteño,33,19,2
-experimental hip hop,33,20,2
-experimental,33,18,2
-djent,33,25,2
-sholawat,33,22,2
-melodic rap,32,20,2
-alternative rock,32,18,2
-smooth r&b,32,22,2
-indie r&b,32,22,2
-dark cabaret,32,28,2
-grupera,32,19,2
-emocore,32,18,2
-pinoy r&b,32,22,2
-vietnamese hip hop,32,20,2
-hyphy,31,20,2
-alternative hip hop,31,20,2
-highlife,31,21,2
-champeta,30,19,2
-acoustic rock,30,18,2
-honky tonk,30,18,2
-cumbia sonidera,30,19,2
-gregorian chant,30,27,2
-arabic rap,30,20,2
-hindi hip hop,30,20,2
-melodic hardcore,30,25,2
-k-rock,30,18,2
-indorock,30,18,2
-malay pop,30,17,2
-memphis rap,29,20,2
-deathstep,28,16,2
-rap,28,20,2
-pop country,28,26,2
-kollywood,28,21,2
-nerdcore,28,20,2
-meme rap,28,20,2
-harana,28,28,2
-electro,27,20,2
-easy listening,27,23,2
-japanese indie,27,17,2
-telugu pop,27,21,2
-rock urbano,27,18,2
-doom metal,27,25,2
-folklore argentino,27,19,2
-finnish pop,27,17,2
-pinoy hip hop,27,20,2
-mahraganat,27,17,2
-rap rock,26,18,2
-pop soul,26,22,2
-j-dance,26,17,2
-gnawa,26,21,2
-pinoy indie,26,17,2
-aussie drill,25,22,2
-gujarati pop,25,17,2
-tollywood,25,21,2
-bongo flava,25,21,2
-indie pop,24,17,2
-vallenato,24,19,2
-black metal,24,25,2
-j-r&b,23,22,2
-smooth soul,23,22,2
-j-rap,23,20,2
-rhumba,23,19,2
-japanese classical,22,27,2
-marathi pop,22,17,2
-bangla pop,22,17,2
-finnish rock,22,18,2
-alternative pop,22,17,2
-breakcore,22,20,2
-shibuya-kei,21,17,2
-chicha,21,19,2
-tecnobrega,21,26,2
-malaysian pop,21,17,2
-iskelmä,21,21,2
-tamil dance,20,18,2
-acoustic folk,20,28,2
-afro adura,20,21,2
-southern gospel,19,26,2
-kayokyoku,19,17,2
-kundiman,19,23,2
-brooklyn drill,18,20,2
-new york drill,18,20,2
-soft pop,18,17,2
-sierreño,18,26,2
-thai hip hop,18,20,2
-tejano,17,19,2
-boogie,17,22,2
-modern rock,16,18,2
-sad sierreño,16,19,2
-japanese vgm,15,16,2
-malay rap,15,20,2
-rage rap,14,20,2
-forro tradicional,14,19,2
-pentecostal,14,26,2
-vocaloid,14,17,2
-punta,13,21,2
-haryanvi pop,13,17,2
-moroccan chaabi,13,21,2
-chinese indie,13,17,2
-grindcore,13,25,2
-bubblegum pop,12,17,2
-kannada pop,12,17,2
-mexican ska,12,18,2
-popular colombian music,12,17,2
-anime rap,12,20,2
-budots,12,21,2
-ethiopian jazz,12,24,2
-egyptian hip hop,12,20,2
-punk rap,11,18,2
-pop,11,17,2
-pop rock,11,18,2
-vietnamese bolero,11,21,2
-asakaa,11,21,2
-electropop,11,17,2
-sovietwave,11,16,2
-latin afrobeat,10,19,2
-cumbia norteña,10,19,2
-gengetone,10,21,2
-egyptian shaabi,10,21,2
-indonesian indie,10,18,2
-latin dance,9,17,2
-thai trap,9,20,2
-visual kei,9,17,2
-pop urbano,8,17,2
-go-go,8,22,2
-sandalwood,8,28,2
-malayalam pop,8,17,2
-finnish hip hop,8,20,2
-funkot,8,16,2
-thai rock,8,18,2
-mollywood,7,17,2
-pinoy rock,7,18,2
-tamil hip hop,7,20,2
-maluku,6,21,2
-phleng phuea chiwit,6,30,2
-taiwanese indie,6,17,2
-chinese rock,6,21,2
-singeli,6,20,2
-bhojpuri pop,5,17,2
-enka,5,21,2
-luk thung,5,28,2
-thai indie pop,5,17,2
-pinoy alternative,5,18,2
-tamil indie,5,21,2
-dance pop,4,17,2
-bhojiwood,4,21,2
-southern thai music,4,21,2
-huayno,4,19,2
-dance,3,16,2
-lagu timur,3,21,2
-dangdut,3,16,2
-algerian chaabi,2,21,2
-duranguense,2,19,2
-fújì,2,21,2
-norteño-sax,2,19,2
-malayalam hip hop,1,20,2
-bisrock,1,18,2
-pop r&b,1,22,2
-lagu jawa,1,21,2
-pop rap,1,20,2
-punto guajiro,1,21,2
-latin afrobeats,1,19,2
+lo-fi,823,64,3
+techno,808,63,3
+trance,794,61,3
+c-pop,785,62,3
+classical,780,71,3
+hands up,764,62,3
+mandopop,698,62,3
+opm,692,62,3
+reggae,604,66,3
+lo-fi beats,594,61,3
+drum and bass,534,61,3
+tropical house,526,61,3
+tech house,524,61,3
+jazz,482,68,3
+hard techno,476,61,3
+melodic house,475,61,3
+afro house,463,61,3
+acid techno,455,61,3
+progressive trance,454,61,3
+dancehall,450,67,3
+chinese r&b,450,66,3
+turkish pop,445,62,3
+worship,422,62,3
+melodic techno,419,61,3
+funk,417,66,3
+dubstep,398,61,3
+nu disco,389,66,3
+german hip hop,388,63,3
+future bass,386,61,3
+country,376,69,3
+deep house,372,61,3
+pinoy indie,372,62,3
+musicals,367,72,3
+christian,367,69,3
+ragga,361,67,3
+taiwanese pop,358,62,3
+lounge,351,72,3
+latin house,343,61,3
+progressive house,339,61,3
+cumbia,327,65,3
+hardstyle,320,61,3
+k-rap,318,63,3
+eurotrance,316,61,3
+bass house,314,61,3
+big room,308,61,3
+afrobeats,307,66,3
+tribal house,305,61,3
+roots reggae,304,66,3
+opera,299,71,3
+italian trap,299,63,3
+future house,298,61,3
+hyperpop,297,62,3
+p-pop,297,62,3
+minimal techno,295,61,3
+mpb,295,65,3
+corrido,294,65,3
+norteño,294,65,3
+finnish hip hop,291,63,3
+afrobeat,288,67,3
+slap house,285,61,3
+brazilian funk,285,65,3
+organic house,284,61,3
+brazilian hip hop,277,63,3
+phonk,277,63,3
+blues,275,74,3
+jazz beats,270,68,3
+liquid funk,269,61,3
+bollywood,269,67,3
+dub,268,66,3
+reggaeton,268,65,3
+chill house,267,61,3
+banda,266,65,3
+children's music,265,72,3
+moombahton,264,61,3
+tekno,262,61,3
+indie folk,261,73,3
+gospel,260,66,3
+norwegian pop,258,62,3
+jazz rap,257,63,3
+eurodance,255,62,3
+funky house,253,61,3
+chinese hip hop,253,63,3
+latin hip hop,252,63,3
+horrorcore,251,63,3
+melodic bass,248,61,3
+riddim,248,63,3
+schlager,246,62,3
+anime,245,62,3
+celtic,244,67,3
+k-pop,244,62,3
+underground hip hop,244,63,3
+salsa,244,65,3
+desi,244,67,3
+sertanejo,243,65,3
+soundtrack,239,72,3
+k-ballad,237,66,3
+french pop,235,62,3
+jungle,235,61,3
+german pop,233,62,3
+arabesque,233,67,3
+grime,230,61,3
+disco house,229,61,3
+nederpop,229,62,3
+finnish pop,228,62,3
+christmas,226,72,3
+afropop,223,62,3
+orchestra,222,71,3
+schlagerparty,222,64,3
+bluegrass,221,69,3
+drill,221,63,3
+french house,219,61,3
+metal,217,70,3
+g-house,217,61,3
+christian hip hop,214,63,3
+chillstep,214,61,3
+east coast hip hop,213,63,3
+west coast hip hop,212,63,3
+pinoy r&b,212,66,3
+downtempo,208,61,3
+chanson,207,72,3
+flamenco,207,65,3
+chinese indie,206,62,3
+nova mpb,204,65,3
+ambient,203,61,3
+neoclassical,202,71,3
+southern hip hop,201,63,3
+metalcore,201,70,3
+house,199,61,3
+bassline,198,61,3
+hindi pop,198,62,3
+pop urbaine,197,67,3
+dark trap,197,63,3
+mexican hip hop,197,63,3
+americana,196,69,3
+blues rock,194,64,3
+afroswing,193,67,3
+idm,192,61,3
+synthpop,191,62,3
+post-punk,191,64,3
+cloud rap,191,63,3
+uk garage,190,61,3
+hardcore,190,70,3
+breakbeat,189,61,3
+soca,188,63,3
+russelåter,188,67,3
+pinoy hip hop,187,63,3
+pinoy rock,187,64,3
+nu jazz,186,68,3
+trip hop,185,62,3
+happy hardcore,185,62,3
+hard bop,185,68,3
+christian pop,182,62,3
+g-funk,181,63,3
+punk,181,64,3
+grupera,181,65,3
+classical piano,179,71,3
+stutter house,179,61,3
+bhangra,179,67,3
+brazilian pop,179,62,3
+latin alternative,178,65,3
+rock en español,178,64,3
+bossa nova,178,68,3
+post-hardcore,177,64,3
+j-pop,177,62,3
+italo dance,176,62,3
+trap,175,63,3
+variété française,175,67,3
+malay,175,67,3
+pop worship,175,62,3
+melbourne bounce,173,61,3
+brazilian bass,171,61,3
+chicago house,169,61,3
+quiet storm,169,66,3
+ccm,169,62,3
+pop punk,168,64,3
+manele,168,63,3
+neo soul,168,66,3
+piano house,168,61,3
+sertanejo universitário,168,65,3
+singer-songwriter,165,73,3
+psytrance,165,61,3
+alternative r&b,162,66,3
+anatolian rock,161,64,3
+epadunk,161,61,3
+miami bass,158,63,3
+brazilian trap,158,65,3
+swedish ballads,157,64,3
+punjabi pop,157,62,3
+edm,156,61,3
+jazz funk,156,68,3
+gufeng,156,67,3
+christian rock,155,64,3
+new wave,155,64,3
+latin indie,155,65,3
+harana,155,73,3
+malay pop,155,62,3
+modern blues,154,74,3
+christian alternative rock,154,64,3
+lullaby,153,75,3
+darkwave,153,64,3
+frenchcore,153,70,3
+newgrass,152,73,3
+funk carioca,152,63,3
+bass music,152,61,3
+t-pop,151,62,3
+synthwave,151,62,3
+folk,151,73,3
+merengue,151,65,3
+boom bap,150,63,3
+tamil pop,149,62,3
+cumbia norteña,147,65,3
+drift phonk,146,61,3
+chamber music,145,71,3
+corridos bélicos,145,65,3
+edm trap,143,61,3
+turkish hip hop,143,63,3
+lo-fi house,143,61,3
+northern soul,143,66,3
+alt country,141,69,3
+flamenco pop,141,67,3
+indie dance,140,61,3
+vocal jazz,139,68,3
+taiwanese indie,139,62,3
+new jack swing,138,66,3
+dream pop,138,62,3
+emo rap,138,63,3
+pinoy alternative,138,64,3
+música mexicana,137,65,3
+italian singer-songwriter,136,64,3
+lovers rock,136,64,3
+hardcore techno,136,62,3
+bebop,136,68,3
+samba,136,65,3
+cold wave,134,61,3
+acid jazz,133,68,3
+latin pop,133,62,3
+uk drill,131,62,3
+ska,131,64,3
+glitch,130,75,3
+memphis rap,130,63,3
+shoegaze,130,64,3
+gospel r&b,130,66,3
+electroclash,129,64,3
+dub techno,128,75,3
+industrial,128,64,3
+trap latino,127,65,3
+classic blues,127,74,3
+thai pop,127,62,3
+drone,126,61,3
+celtic rock,126,64,3
+norwegian rap,126,63,3
+malaysian pop,126,62,3
+bolero,126,65,3
+mexican indie,126,65,3
+funk melody,125,69,3
+trap funk,125,61,3
+kollywood,124,67,3
+bedroom pop,124,62,3
+dembow,124,65,3
+swing music,123,68,3
+uk funky,123,61,3
+red dirt,123,69,3
+retro soul,123,66,3
+tejano,123,65,3
+indietronica,122,62,3
+disco,121,66,3
+garage rock,121,64,3
+spanish language reggae,120,65,3
+azonto,118,67,3
+corridos tumbados,118,65,3
+mexican rock,118,64,3
+sierreño,118,69,3
+desi pop,118,62,3
+brazilian evangelical music,117,65,3
+drumstep,116,61,3
+minimalism,116,71,3
+cool jazz,116,68,3
+salsa romantica,115,65,3
+emo,114,64,3
+avant-garde,114,71,3
+chillwave,114,64,3
+post-rock,113,64,3
+italo disco,113,62,3
+post-disco,113,66,3
+brazilian rock,113,64,3
+choral,112,71,3
+acid house,112,61,3
+gothic country,111,73,3
+alté,110,67,3
+jazz fusion,109,68,3
+folk pop,109,73,3
+witch house,109,61,3
+freestyle,109,63,3
+hard house,109,61,3
+vallenato,109,65,3
+rocksteady,109,64,3
+rkt,109,65,3
+proto-punk,108,64,3
+cedm,108,61,3
+deathstep,108,61,3
+chill beats,108,75,3
+ebm,108,75,3
+electro house,107,61,3
+texas country,107,69,3
+karadeniz folk,106,73,3
+latin rock,106,64,3
+amapiano,105,61,3
+latin jazz,105,68,3
+doo-wop,105,74,3
+christian folk,105,69,3
+cantopop,104,62,3
+power pop,103,62,3
+rockabilly,103,64,3
+canzone napoletana,102,67,3
+ska punk,102,73,3
+big band,101,72,3
+french jazz,101,68,3
+cumbia sonidera,101,65,3
+arrocha,101,69,3
+stoner rock,100,64,3
+soul,100,66,3
+tamil dance,100,64,3
+free jazz,100,68,3
+motown,99,66,3
+folk punk,99,73,3
+brega funk,99,62,3
+zouk,98,65,3
+psychedelic rock,97,64,3
+punjabi hip hop,97,63,3
+country rock,96,64,3
+dark ambient,96,61,3
+gabber,96,61,3
+hard rock,95,64,3
+progressive rock,95,64,3
+jersey club,95,62,3
+vaporwave,95,62,3
+trova,95,65,3
+rap metal,94,70,3
+album rock,94,64,3
+medieval,94,71,3
+j-rock,94,64,3
+iskelmä,94,67,3
+polka,94,72,3
+math rock,93,64,3
+bachata,93,65,3
+turreo,93,61,3
+roots rock,92,64,3
+timba,92,65,3
+kundiman,92,72,3
+surf rock,92,64,3
+sea shanties,91,72,3
+hardcore hip hop,91,63,3
+rave,91,61,3
+experimental,90,64,3
+deathrock,90,64,3
+guaracha,90,65,3
+pagode,90,65,3
+sufi,89,67,3
+reggae rock,89,64,3
+hardcore punk,89,70,3
+indie,88,62,3
+afro soul,88,66,3
+experimental hip hop,88,63,3
+reggaeton mexa,88,65,3
+r&b,87,66,3
+hyphy,87,63,3
+raï,87,67,3
+flamenco urbano,87,65,3
+death metal,87,70,3
+khaleeji,87,67,3
+gangster rap,86,63,3
+electro swing,86,72,3
+europop,86,62,3
+country hip hop,86,63,3
+melodic metal,86,70,3
+forró,86,65,3
+indian indie,86,64,3
+traditional country,85,69,3
+deathcore,85,70,3
+nightcore,85,62,3
+space rock,85,64,3
+piseiro,85,69,3
+brega,85,69,3
+nu metal,84,70,3
+glam metal,84,70,3
+glam rock,84,64,3
+gqom,83,67,3
+classic rock,83,64,3
+requiem,83,71,3
+electronic,82,61,3
+post-grunge,82,70,3
+hi-nrg,82,66,3
+chamber pop,82,62,3
+brazilian jazz,82,68,3
+power metal,82,70,3
+southern rock,81,64,3
+devotional,81,73,3
+smooth jazz,81,68,3
+agronejo,81,69,3
+calypso,81,72,3
+art pop,80,62,3
+britpop,80,62,3
+ranchera,80,65,3
+chinese rock,80,67,3
+crunk,79,63,3
+new age,79,75,3
+colombian pop,79,62,3
+screamo,79,70,3
+acoustic pop,78,62,3
+djent,78,70,3
+midwest emo,78,64,3
+argentine rock,78,64,3
+neomelodico,77,62,3
+dansktop,76,69,3
+heavy metal,76,70,3
+hiplife,76,67,3
+kizomba,76,65,3
+alternative metal,75,70,3
+latin folk,74,65,3
+soul jazz,73,68,3
+son cubano,73,65,3
+sludge metal,72,70,3
+jangle pop,72,62,3
+christian country,72,69,3
+mambo,72,65,3
+urbano latino,71,65,3
+big beat,71,61,3
+nueva trova,71,65,3
+indonesian pop,71,62,3
+dansband,70,62,3
+cuarteto,70,65,3
+hindi indie,70,64,3
+skate punk,69,70,3
+desi hip hop,69,63,3
+sad sierreño,69,65,3
+breakcore,68,63,3
+electro corridos,68,61,3
+mizrahi,68,62,3
+kuduro,68,67,3
+city pop,68,62,3
+progressive metal,67,70,3
+symphonic metal,67,70,3
+latin r&b,67,65,3
+jazz blues,67,74,3
+pirate metal,67,70,3
+reggaeton chileno,67,65,3
+symphonic rock,66,64,3
+baroque pop,66,62,3
+mariachi,66,65,3
+ragtime,66,68,3
+spoken word,65,63,3
+chilean trap,65,63,3
+funk de bh,65,61,3
+philly soul,64,66,3
+speedcore,64,61,3
+industrial metal,63,70,3
+bounce,63,63,3
+comedy,63,69,3
+country blues,62,74,3
+malay rap,61,63,3
+folk rock,60,64,3
+alternative hip hop,60,63,3
+meme rap,60,63,3
+neue deutsche welle,60,64,3
+sertanejo tradicional,60,69,3
+traditional music,59,67,3
+música tropical,59,65,3
+hip hop,58,63,3
+axé,58,65,3
+indie rock,57,64,3
+oyun havasi,57,62,3
+electronic rock,57,64,3
+finnish rock,57,64,3
+nz reggae,56,68,3
+art rock,56,64,3
+speed metal,56,70,3
+space music,56,61,3
+tango,56,65,3
+j-r&b,56,66,3
+chilean mambo,56,67,3
+arabic rap,56,63,3
+acid rock,55,64,3
+new rave,55,64,3
+madchester,55,64,3
+electronica,54,61,3
+doom metal,54,70,3
+hip house,54,61,3
+alternative dance,53,64,3
+thai rock,53,64,3
+rage rap,52,63,3
+argentine trap,52,63,3
+psychobilly,52,64,3
+japanese classical,51,71,3
+nerdcore,51,63,3
+slowcore,51,73,3
+noise rock,51,64,3
+melodic rap,50,63,3
+groove metal,50,70,3
+arena rock,50,64,3
+j-rap,50,63,3
+rock,49,64,3
+soft rock,49,64,3
+soul blues,49,74,3
+bhajan,49,75,3
+thai hip hop,49,63,3
+acoustic country,49,69,3
+neoperreo,48,61,3
+industrial rock,48,64,3
+folk metal,48,70,3
+rock urbano,48,64,3
+grindcore,48,70,3
+electro,47,63,3
+bangla pop,47,62,3
+egyptian pop,47,62,3
+funk rock,46,64,3
+tamil hip hop,46,63,3
+k-rock,46,64,3
+boogie-woogie,46,74,3
+funk consciente,46,65,3
+portuguese hip hop,45,63,3
+gothic metal,45,70,3
+smooth r&b,44,66,3
+exotica,44,72,3
+indie jazz,44,68,3
+psychedelic pop,44,62,3
+hindi hip hop,44,63,3
+qawwali,44,67,3
+bisrock,43,64,3
+japanese indie,43,62,3
+grunge,42,64,3
+latin,42,65,3
+shibuya-kei,42,62,3
+indie r&b,41,66,3
+krautrock,41,64,3
+new york drill,41,63,3
+haryanvi pop,41,62,3
+emo pop,41,62,3
+seresta,41,73,3
+chicha,40,65,3
+funk pop,40,62,3
+j-dance,40,62,3
+anime rap,40,63,3
+gnawa,39,67,3
+adult standards,39,72,3
+rap rock,39,64,3
+norteño-sax,39,65,3
+cha cha cha,38,65,3
+telugu pop,38,67,3
+aussie drill,37,66,3
+melodic hardcore,37,70,3
+honky tonk,37,64,3
+champeta,36,65,3
+bachata pop,36,65,3
+brooklyn drill,36,63,3
+pagode baiano,36,65,3
+pentecostal,36,69,3
+melodic death metal,36,70,3
+highlife,36,67,3
+tollywood,36,67,3
+emocore,35,64,3
+neofolk,34,73,3
+alternative rock,33,64,3
+medieval metal,33,70,3
+tamil indie,33,67,3
+kayokyoku,33,62,3
+laïko,32,67,3
+mahraganat,32,62,3
+malayalam pop,32,62,3
+ghazal,32,67,3
+rap,31,63,3
+bongo flava,31,67,3
+budots,31,67,3
+popular colombian music,31,62,3
+folklore argentino,31,65,3
+thrash metal,30,70,3
+vinahouse,30,61,3
+mexican ska,30,64,3
+fado,30,65,3
+rock and roll,29,64,3
+new beat,29,62,3
+punk rap,28,64,3
+pop country,28,69,3
+duranguense,28,65,3
+gregorian chant,27,71,3
+vocaloid,27,62,3
+entehno,26,67,3
+afro adura,26,67,3
+acoustic rock,25,64,3
+black metal,25,70,3
+mollywood,25,62,3
+thai trap,25,63,3
+indie pop,24,62,3
+dark cabaret,24,73,3
+dangdut,24,61,3
+disco polo,24,62,3
+southern gospel,23,69,3
+indonesian indie,23,64,3
+african gospel,22,67,3
+thai indie pop,22,62,3
+kannada pop,22,62,3
+easy listening,21,72,3
+gujarati garba,20,67,3
+soft pop,19,62,3
+latin afrobeat,19,65,3
+indorock,19,64,3
+marathi pop,19,62,3
+gengetone,18,67,3
+smooth soul,18,66,3
+asakaa,18,67,3
+moroccan chaabi,18,67,3
+tecnobrega,18,69,3
+sholawat,17,66,3
+sovietwave,17,61,3
+maluku,17,67,3
+modern rock,16,64,3
+rhumba,16,65,3
+egyptian shaabi,15,67,3
+pop soul,14,66,3
+pop rock,14,64,3
+go-go,14,66,3
+batak,14,75,3
+bubblegum pop,13,62,3
+huayno,13,65,3
+visual kei,13,62,3
+boogie,12,66,3
+gujarati pop,12,62,3
+pop,11,62,3
+japanese vgm,11,61,3
+latin dance,11,62,3
+acoustic folk,11,73,3
+lagu timur,11,67,3
+lagu jawa,11,67,3
+phleng phuea chiwit,11,75,3
+egyptian hip hop,11,63,3
+electropop,10,62,3
+malayalam hip hop,10,63,3
+forro tradicional,10,65,3
+funkot,10,61,3
+v-pop,10,62,3
+ethiopian jazz,9,68,3
+punta,8,67,3
+luk thung,8,73,3
+sandalwood,8,73,3
+singeli,8,63,3
+enka,8,67,3
+pop urbano,6,62,3
+southern thai music,6,67,3
+algerian chaabi,5,67,3
+vietnamese hip hop,5,63,3
+thai indie rock,5,64,3
+bhojpuri pop,4,62,3
+vietnamese lo-fi,4,67,3
+dance,3,61,3
+dance pop,3,62,3
+punto guajiro,3,67,3
+vietnam indie,3,67,3
+alternative pop,3,62,3
+funk bruxaria,2,65,3
+bhojiwood,2,67,3
+vietnamese bolero,1,67,3
+pop rap,1,63,3
+fújì,1,67,3
+latin afrobeats,1,65,3
+pop r&b,1,66,3

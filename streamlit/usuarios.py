@@ -18,7 +18,7 @@ supabase: Client = create_client(url, key)
 # Configuración de Spotify
 CLIENT_ID = os.getenv("client_ID")
 CLIENT_SECRET = os.getenv("client_Secret")
-REDIRECT_URI = "http://localhost:8501"  # Asegúrate de registrar esto en Spotify Developer
+REDIRECT_URI = "http://localhost:8501"  # Asegúrate de registrarlo en Spotify Developer
 SCOPES = (
     "user-read-private user-read-email user-library-read "
     "playlist-read-private playlist-read-collaborative "
@@ -27,68 +27,94 @@ SCOPES = (
     "streaming user-follow-read"
 )
 
+# Inicializar la sesión en Streamlit
+if "token_info" not in st.session_state:
+    st.session_state["token_info"] = None
+if "spotify_token" not in st.session_state:
+    st.session_state["spotify_token"] = None
+if "user_id" not in st.session_state:
+    st.session_state["user_id"] = None
+if "afinidad_calculada" not in st.session_state:
+    st.session_state["afinidad_calculada"] = {}
+if "data_cargada" not in st.session_state:
+    st.session_state["data_cargada"] = {}
+
+# Variable de control de la pantalla actual.
+if "current_page" not in st.session_state:
+    st.session_state["current_page"] = "welcome"  # Pantalla inicial: Bienvenida
+
 # Crear instancia de SpotifyOAuth
 sp_oauth = SpotifyOAuth(
     client_id=CLIENT_ID,
     client_secret=CLIENT_SECRET,
     redirect_uri=REDIRECT_URI,
     scope=SCOPES,
-    cache_path=".spotify_cache",
+    cache_path=None,
     show_dialog=True
 )
 
-# Inicializar session_state si no existe
-if "spotify_token" not in st.session_state:
-    st.session_state["spotify_token"] = None
-
-if "afinidad_calculada" not in st.session_state:
-    st.session_state["afinidad_calculada"] = {}
-
-
-# Configurar la pestaña con un nombre atractivo y un icono
 st.set_page_config(page_title="BrandVibes - Tu identidad musical", page_icon="🎧")
 
-# Si el usuario no está autenticado, mostrar pantalla de bienvenida
-if not st.session_state["spotify_token"]:
+# ============================================================================
+# PANTALLA 1: Bienvenida e inicio de sesión
+# ============================================================================
+def pantalla_bienvenida():
     st.title("🎧 ¡Bienvenido a BrandVibes! 🔥")
+    st.markdown(
+        """
+        ### 🎶 **Descubre qué marcas vibran con tu rollo.**  
+        ¿Tu música define quién eres? Entonces **tu estilo también debería hacerlo.**  
+        **BrandVibes** analiza lo que escuchas y te dice qué marcas encajan contigo.  
 
-    # Descripción con más gancho
-    st.markdown("""
-    ### 🎶 **Descubre qué marcas vibran con tu rollo.**  
-    ¿Tu música define quién eres? Entonces **tu estilo también debería hacerlo.**  
-    **BrandVibes** analiza lo que escuchas y te dice qué marcas encajan contigo.  
+        ### 🚀 **Cómo funciona (fácil y rápido):**  
+        1️⃣ **Conéctate a Spotify** en un clic.  
+        2️⃣ **Analizamos tu estilo** y sacamos tu **ADN** musical.  
+        3️⃣ **Te mostramos tu afinidad** con las marcas en nuestra base de datos.  
+        4️⃣ **De paso, te damos tu perfil musical completo.**  
 
-    ### 🚀 **Cómo funciona (fácil y rápido):**  
-    1️⃣ **Conéctate a Spotify** en un clic.  
-    2️⃣ **Analizamos tu estilo** y sacamos tu **ADN** musical.  
-    3️⃣ **Te mostramos tu afinidad** con las marcas en nuestra base de datos.  
-    4️⃣ **De paso, te damos tu perfil musical completo.**  
-
-    ### 🔥 **¿Listo para saber qué marcas te representan?**  
-    Conéctate y descubre tu **match** musical con el mundo de la moda. 🎧👕  
-    """, unsafe_allow_html=True)
-
-
-    # Botón de conexión a Spotify
+        ### 🔥 **¿Listo para saber qué marcas te representan?**  
+        Conéctate y descubre tu **match** musical con el mundo de la moda. 🎧👕  
+        """, 
+        unsafe_allow_html=True
+    )
     auth_url = sp_oauth.get_authorize_url()
     st.link_button("🎵 Conectar con Spotify", auth_url)
-    auth_code = st.query_params.get("code")
 
+    # Capturamos el parámetro "code" de la URL, si existe.
+    query_params = st.query_params
+    auth_code = query_params.get("code")
     if auth_code:
-        token_info = sp_oauth.get_access_token(auth_code, as_dict=False)
+        # auth_code puede ser una lista; tomamos el primer valor.
+        if isinstance(auth_code, list):
+            auth_code = auth_code[0]
+        token_info = sp_oauth.get_access_token(auth_code, as_dict=False, check_cache=False)
+        st.session_state["token_info"] = token_info
         st.session_state["spotify_token"] = token_info
-        st.rerun()
-else:
-    sp = spotipy.Spotify(auth=st.session_state["spotify_token"])
-    user_info = sp.current_user()
-    user_id = user_info['id']
-    user_name = user_info['display_name']
 
+        # Obtener y almacenar la información del usuario.
+        sp = spotipy.Spotify(auth=st.session_state["spotify_token"])
+        user_info = sp.current_user()
+        st.session_state["user_id"] = user_info["id"]
+
+        # Limpiar los parámetros de la URL para evitar reprocesos.
+        st.query_params.clear()
+        # Cambiar a la pantalla de "primera vez" y forzar el rerun de la app.
+        st.session_state["current_page"] = "first_time"
+        st.rerun()
+
+# ============================================================================
+# PANTALLA 2: Primera vez (registro y subida de datos a la BD)
+# ============================================================================
+def pantalla_primera_vez():
+    sp = spotipy.Spotify(auth=st.session_state["spotify_token"])
+    user_id = st.session_state["user_id"]
+
+    # Comprobamos si el usuario ya existe en la BD.
     user_check = supabase.table("users").select("user_id").eq("user_id", user_id).execute().data
 
     if not user_check:
         st.warning("⚠️ ¡Es tu Primera Vez! Vamos a analizar tu música y prepararte algo épico... 🎧🔥")
-
+        
         with st.spinner("🎧 Analizando tu perfil musical... 🔍"):
             spot.generate_current_user(sp)
         st.success("✅ ¡Listo! Tu identidad sonora está en marcha. 🚀")
@@ -102,68 +128,42 @@ else:
         st.success("✅ ¡Top tracks detectados! Estos son tus esenciales. 🎵")
 
         with st.spinner("🏆 Construyendo tu ranking de artistas... 🎤"):
-            spot.generate_user_artist_ranking(sp,supabase)
+            spot.generate_user_artist_ranking(sp, supabase)
         st.success("✅ Tus artistas favoritos ya tienen su podio. 🏅")
 
         with st.spinner("🎙️ Afinando géneros y subgéneros... 🎚️"):
-            spot.generate_user_genre_and_subgenre_ranking(sp,supabase)
+            spot.generate_user_genre_and_subgenre_ranking(sp, supabase)
         st.success("✅ ¡Todo listo! Tu ADN musical está completo. ⚡")
-  
-        time.sleep(1)
-        st.session_state.clear()
+
         st.success("🎉 ¡Todo listo! Tu música ha hablado, y ahora llega el momento clave...")
 
-        countdown_text = ["🔥 Cargando tu BrandVibe...", "⚡ Ajustando las frecuencias...", "🚀 Todo listo, dale caña..."]
+        countdown_text = [
+            "🔥 Cargando tu BrandVibe...", 
+            "⚡ Ajustando las frecuencias...", 
+            "🚀 Todo listo, dale caña..."
+        ]
         for i in range(3, 0, -1):
             st.header(f"⏳ {i}... {countdown_text[3 - i]}")
-            st.session_state.clear()
             time.sleep(1)
 
-        st.session_state.clear()
+        # Volvemos a consultar si el usuario fue agregado a la BD.
+        user_check = supabase.table("users").select("user_id").eq("user_id", user_id).execute().data
+        if user_check:
+            st.success("✅ ¡Usuario creado exitosamente!")
+            st.session_state["current_page"] = "dashboard"
+            st.rerun()
+        else:
+            st.error("❌ Hubo un error al crear tu usuario. Por favor, intenta nuevamente.")
+    else:
+        # Si el usuario ya existe, pasamos directamente al dashboard.
+        st.session_state["current_page"] = "dashboard"
         st.rerun()
 
-    st.title(f"🎵 Tu universo musical - {user_name}!")
-
-    # 🔥 **Nueva sección de afinidad**
-    st.subheader("🔍 Descubre tu conexión con las marcas")
-
-    # Tabs para cambiar entre Zara y Primark dinámicamente
-    tab1, tab2 = st.tabs(["Zara", "Primark"])
-    
-    # Diccionario de marcas con su ID en Supabase
-    marcas = {"Zara": 1, "Primark": 2}
-
-    def calcular_afinidad(brand_name, brand_id):
-        """
-        Calcula afinidades y las almacena en session_state si aún no han sido calculadas.
-        """
-        clave = f"{user_id}_{brand_name}"
-        if clave not in st.session_state["afinidad_calculada"]:
-            st.session_state["afinidad_calculada"][clave] = {
-                "artistas": spot.obtener_afinidad_por_artista(supabase, brand_id, user_id),
-                "generos": spot.obtener_afinidad_por_genero(supabase, brand_id, user_id),
-                "subgeneros": spot.obtener_afinidad_por_subgenero(supabase, brand_id, user_id)
-            }
-
-    # Función para mostrar métricas según la marca seleccionada
-    def mostrar_afinidad(brand_name, brand_id):
-        calcular_afinidad(brand_name, brand_id)
-        datos = st.session_state["afinidad_calculada"][f"{user_id}_{brand_name}"]
-        col1, col2, col3 = st.columns(3)
-        col1.metric(label=f"Afinidad según Artistas", value=f"{datos['artistas']:.2f}%")
-        col2.metric(label=f"Afinidad según Géneros", value=f"{datos['generos']:.2f}%")
-        col3.metric(label=f"Afinidad según Subgéneros", value=f"{datos['subgeneros']:.2f}%")
-
-
-    # Configurar cada tab con su respectiva marca
-    with tab1:
-        mostrar_afinidad("Zara", marcas["Zara"])
-    with tab2:
-        mostrar_afinidad("Primark", marcas["Primark"])
-
-    st.divider()
-
-    # ---- CSS para el diseño ----
+# ============================================================================
+# PANTALLA 3: Dashboard (vista principal)
+# ============================================================================
+def pantalla_dashboard():
+        # ---- CSS para el diseño del dashboard (Página 3) ----
     st.markdown("""
         <style>
         .top-3-container {
@@ -236,42 +236,105 @@ else:
         }
         </style>
     """, unsafe_allow_html=True)
+    sp = spotipy.Spotify(auth=st.session_state["spotify_token"])
+    user_info = sp.current_user()
+    user_id = user_info["id"]
+    st.session_state["user_id"] = user_id
+    user_name = user_info.get("display_name", "Usuario")
 
-    # Almacenar rankings en session_state para evitar recargas
-    if "rankings" not in st.session_state:
-        st.session_state["rankings"] = {
-            "🎤 Top Artistas": spot.obtener_top_artistas(supabase, user_id, start=0, end=3),
-            "🎶 Top Géneros": spot.obtener_top_generos(supabase, user_id, start=0, end=3),
-            "🔥 Top Subgéneros": spot.obtener_top_subgeneros(supabase, user_id, start=0, end=3)
+    st.title(f"🎵 Tu universo musical - {user_name}!")
+
+    # Sección de afinidad con marcas.
+    st.subheader("🔍 Descubre tu conexión con las marcas")
+    
+    
+    marcas = [
+        {"id": 1, "name": "Zara"},
+        {"id": 2, "name": "Primark"},
+        {"id": 3, "name": "Nike"}
+        # Puedes descomentar o agregar más marcas si lo deseas:
+        # {"id": 4, "name": "Adidas"},
+        # {"id": 5, "name": "H&M"},
+        # {"id": 6, "name": "Pull & Bear"},
+        # {"id": 7, "name": "Bershka"},
+        # {"id": 8, "name": "Stradivarius"},
+        # {"id": 9, "name": "Mango"},
+        # {"id": 10, "name": "Desigual"}
+    ]
+
+    # Crear pestañas utilizando el nombre de cada marca
+    tabs = st.tabs([marca["name"] for marca in marcas])
+
+    def calcular_afinidad(brand_name, brand_id):
+        clave = f"{user_id}_{brand_name}"
+        if clave not in st.session_state["afinidad_calculada"]:
+            st.session_state["afinidad_calculada"][clave] = {
+                "artistas": spot.obtener_afinidad_por_artista(supabase, brand_id, user_id),
+                "generos": spot.obtener_afinidad_por_genero(supabase, brand_id, user_id),
+                "subgeneros": spot.obtener_afinidad_por_subgenero(supabase, brand_id, user_id)
+            }
+
+    def mostrar_afinidad(brand_name, brand_id):
+        calcular_afinidad(brand_name, brand_id)
+        datos = st.session_state["afinidad_calculada"][f"{user_id}_{brand_name}"]
+        col1, col2, col3 = st.columns(3)
+        col1.metric(label=f"Afinidad según Artistas", value=f"{datos['artistas']:.2f}%")
+        col2.metric(label=f"Afinidad según Géneros", value=f"{datos['generos']:.2f}%")
+        col3.metric(label=f"Afinidad según Subgéneros", value=f"{datos['subgeneros']:.2f}%")
+
+    for i, marca in enumerate(marcas):
+        # Configurar cada tab con su respectiva marca
+        with tabs[i]:
+            mostrar_afinidad(marca, marca["id"])
+
+
+    st.divider()
+
+    # Ejemplo de sección de ranking en el dashboard.
+    if "rankings" not in st.session_state["data_cargada"]:
+        st.session_state["data_cargada"]["rankings"] = {
+            "top_rankings": {
+                "🎤 Top Artistas": [
+                    spot.obtener_top_artistas(supabase, user_id, start=j, end=j)[0] for j in range(3)
+                ],
+                "🎶 Top Géneros": [
+                    spot.obtener_top_generos(supabase, user_id, start=j, end=j)[0] for j in range(3)
+                ],
+                "🔥 Top Subgéneros": [
+                    spot.obtener_top_subgeneros(supabase, user_id, start=j, end=j)[0] for j in range(3)
+                ]
+            },
+            "dataframes": {
+                "🎤 Top Artistas": spot.obtener_resto_artistas(supabase, user_id, start=0, end=999999),
+                "🎶 Top Géneros": spot.obtener_resto_generos(supabase, user_id, start=0, end=999999),
+                "🔥 Top Subgéneros": spot.obtener_resto_subgeneros(supabase, user_id, start=0, end=999999)
+            }
         }
+    datos = st.session_state["data_cargada"]["rankings"]
 
-    option = st.selectbox(
-        "📊 Selecciona una métrica para visualizar:",
-        ["🎤 Top Artistas", "🎶 Top Géneros", "🔥 Top Subgéneros"]
+    selected_ranking = st.selectbox(
+        "📊 **Selecciona un Ranking:**", list(datos["top_rankings"].keys()), key="ranking_selector"
     )
 
-    # Recuperar ranking desde session_state
-    ranking_data = st.session_state["rankings"][option]
-
-    st.subheader(option)
+    st.subheader(selected_ranking)
     col2, col1, col3 = st.columns(3)
-
     podium_structure = [
         {"title": "Top 1", "class": "top-1", "title_class": "title-top-1", "medal": "🥇"},
         {"title": "Top 2", "class": "top-2", "title_class": "title-top-2", "medal": "🥈"},
         {"title": "Top 3", "class": "top-3", "title_class": "title-top-3", "medal": "🥉"},
     ]
-
-    # Determinar qué campo usar en función de la selección
     name_field = {
         "🎤 Top Artistas": "artist_name",
         "🎶 Top Géneros": "genre_name",
         "🔥 Top Subgéneros": "subgenre_name"
-    }[option]
-
+    }[selected_ranking]
+    ranking_data = datos["top_rankings"][selected_ranking]
     for col, ranking, podium in zip([col1, col2, col3], ranking_data, podium_structure):
         with col:
-            st.markdown(f'<div class="ranking-title {podium["title_class"]}">{podium["title"]}</div>', unsafe_allow_html=True)
+            st.markdown(
+                f'<div class="ranking-title {podium["title_class"]}">{podium["title"]}</div>',
+                unsafe_allow_html=True
+            )
             st.markdown(f"""
                 <div class="artist-card {podium['class']}">
                     <span class="medal">{podium['medal']}</span>
@@ -279,17 +342,16 @@ else:
                     <div class="score">Escuchas: {ranking['number_of_appearances']}</div>
                 </div>
             """, unsafe_allow_html=True)
-
-    # Almacenar DataFrame en session_state para evitar recargas
-    if "rankings_df" not in st.session_state:
-        st.session_state["rankings_df"] = {
-            "🎤 Top Artistas": spot.obtener_resto_artistas(supabase, user_id, start=0, end=999999),
-            "🎶 Top Géneros": spot.obtener_resto_generos(supabase, user_id, start=0, end=999999),
-            "🔥 Top Subgéneros": spot.obtener_resto_subgeneros(supabase, user_id, start=0, end=999999)
-        }
-
-    df_data = st.session_state["rankings_df"][option]
-
     st.divider()
     st.subheader("📊 Detalle del Ranking Seleccionado")
-    st.dataframe(df_data, use_container_width=True)
+    st.dataframe(datos["dataframes"][selected_ranking], use_container_width=True)
+
+# ============================================================================
+# Control de pantallas según el estado en st.session_state
+# ============================================================================
+if st.session_state["current_page"] == "welcome":
+    pantalla_bienvenida()
+elif st.session_state["current_page"] == "first_time":
+    pantalla_primera_vez()
+elif st.session_state["current_page"] == "dashboard":
+    pantalla_dashboard()

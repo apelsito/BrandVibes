@@ -60,7 +60,7 @@ def obtener_resto_artistas(supabase_credential, start = 0, end = 0, id_brand = 0
         print("No se ha especificado el id de la marca")
     else:
         # Primero obtenemos el id de los seguidores de la marca 
-        ranking_response = supabase_credential.table('artists_ranking').select('artist_name','number_of_appearances').eq('brand_id', 1).range(start,end).order('number_of_appearances',desc=True).execute().data
+        ranking_response = supabase_credential.table('artists_ranking').select('artist_name','number_of_appearances').eq('brand_id', id_brand).range(start,end).order('number_of_appearances',desc=True).execute().data
         # Ahora generamos el dataframe
         artists_names = []
         artists_appearances = []
