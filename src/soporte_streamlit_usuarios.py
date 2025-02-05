@@ -1,3 +1,8 @@
+import os
+base_path = os.path.dirname(os.path.abspath(__file__))  # Obtiene la ruta absoluta del script
+file_path = os.path.join(base_path, "../datos/00_Spotify_Genres/genres_dict.json")
+
+
 import sys
 sys.path.append("../")
 import pandas as pd
@@ -192,36 +197,37 @@ def mapeo_genres():
     """
     Crea un diccionario de mapeo entre subgéneros y géneros principales a partir de un archivo JSON.
 
-    El archivo JSON debe contener una estructura donde los géneros principales están mapeados
-    a listas de subgéneros.
+    Funciona tanto en local como en Streamlit Community Cloud.
 
     Retorna:
     --------
     dictio_genres : dict
-        Un diccionario donde las claves son los subgéneros y los valores son los géneros principales
-        a los que pertenecen.
+        Un diccionario donde las claves son los subgéneros y los valores son los géneros principales.
 
     Proceso:
     --------
-    1. Abre y carga el archivo JSON ubicado en "../datos/00_Spotify_Genres/genres_dict.json".
-    2. Itera sobre los géneros principales y sus subgéneros dentro del campo "genres_map".
-    3. Construye un diccionario donde cada subgénero apunta a su género principal.
+    1. Detecta la ruta absoluta de ejecución.
+    2. Construye la ruta correcta del archivo JSON sin importar el entorno.
+    3. Carga los datos y crea el diccionario de mapeo.
 
     Notas:
     ------
-    - El archivo JSON debe tener una clave llamada "genres_map" que contenga el mapeo entre géneros 
-    principales y subgéneros.
+    - El archivo JSON debe tener una clave llamada "genres_map" que contenga el mapeo entre géneros principales y subgéneros.
     """
 
-    with open("../datos/00_Spotify_Genres/genres_dict.json", "r") as file:
-        genres_mapping = json.load(file)
-    
-    dictio_genres = {}
-    for main_genre, subgenres in genres_mapping["genres_map"].items():
-        for subgenre in subgenres:
-            dictio_genres[subgenre] = main_genre
-    return dictio_genres
+    # Obtiene la ruta del directorio actual del script
+    base_path = os.path.dirname(os.path.abspath(__file__))
 
+    # Construye la ruta del archivo JSON de manera segura
+    file_path = os.path.join(base_path, "..", "datos", "00_Spotify_Genres", "genres_dict.json")
+
+    # Carga el archivo JSON y construye el diccionario de mapeo
+    with open(file_path, "r", encoding="utf-8") as file:
+        genres_mapping = json.load(file)
+
+    dictio_genres = {subgenre: main_genre for main_genre, subgenres in genres_mapping["genres_map"].items() for subgenre in subgenres}
+    
+    return dictio_genres
 #######################################################################################
 ##              Obtener Géneros y Subgéneros y subir a la Base de Datos              ##
 #######################################################################################
