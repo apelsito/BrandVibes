@@ -21,7 +21,6 @@ h11==0.14.0
 h2==4.1.0
 hpack==4.0.0
 httpcore==1.0.7
-httpx==0.28.1
 hyperframe==6.0.1
 idna==2.10
 Jinja2==3.1.5
@@ -34,10 +33,7 @@ multidict==6.1.0
 numpy==1.24.3
 pandas==2.2.3
 pillow==11.1.0
-postgrest==0.19.1
-postgrest-py==0.4.0
 protobuf==5.29.3
-psycopg2==2.9.10
 pyarrow==19.0.0
 pydantic==2.10.5
 pydeck==0.9.1
