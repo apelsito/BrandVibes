@@ -4,9 +4,11 @@ import spotipy
 import time
 from spotipy.oauth2 import SpotifyOAuth
 import sys
-sys.path.append("../")
-import src.soporte_streamlit_usuarios as spot
 import os
+#sys.path.append("../")
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+import src.soporte_streamlit_usuarios as spot
+
 from dotenv import load_dotenv  
 load_dotenv()  
 
