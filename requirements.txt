@@ -10,3 +10,4 @@ webdriver-manager==4.0.2
 beautifulsoup4==4.12.3
 tqdm==4.67.1
 selenium==4.27.1
+psycopg2==2.9.10
