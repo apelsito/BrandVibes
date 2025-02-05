@@ -20,7 +20,7 @@ supabase: Client = create_client(url, key)
 # Configuración de Spotify
 CLIENT_ID = os.getenv("client_ID")
 CLIENT_SECRET = os.getenv("client_Secret")
-REDIRECT_URI = "http://localhost:8501"  # Asegúrate de registrarlo en Spotify Developer
+REDIRECT_URI = os.getenv("redirect_url")  # Asegúrate de registrarlo en Spotify Developer
 SCOPES = (
     "user-read-private user-read-email user-library-read "
     "playlist-read-private playlist-read-collaborative "
