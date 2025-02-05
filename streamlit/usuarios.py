@@ -94,7 +94,7 @@ def pantalla_bienvenida():
         st.session_state["spotify_token"] = token_info
 
         # Obtener y almacenar la información del usuario.
-        sp = spotipy.Spotify(auth=st.session_state["spotify_token"])
+        sp = spotipy.Spotify(auth=st.session_state["spotify_token"],requests_timeout=60)
         user_info = sp.current_user()
         st.session_state["user_id"] = user_info["id"]
 
@@ -108,14 +108,18 @@ def pantalla_bienvenida():
 # PANTALLA 2: Primera vez (registro y subida de datos a la BD)
 # ============================================================================
 def pantalla_primera_vez():
-    sp = spotipy.Spotify(auth=st.session_state["spotify_token"])
+    sp = spotipy.Spotify(auth=st.session_state["spotify_token"],requests_timeout=60)
     user_id = st.session_state["user_id"]
 
     # Comprobamos si el usuario ya existe en la BD.
     user_check = supabase.table("users").select("user_id").eq("user_id", user_id).execute().data
 
     if not user_check:
+        st.title(f"🎵 Obteniendo tu información - Deja esta pestaña abierta!")
         st.warning("⚠️ ¡Es tu Primera Vez! Vamos a analizar tu música y prepararte algo épico... 🎧🔥")
+        st.info("""💡 Este proceso puede llevar algunos minutos. La velocidad dependerá de tu conexión a internet y del tiempo de respuesta de Spotify.  
+  
+                ☕ Relájate, tómate algo y deja que nos encarguemos del resto. ¡Tu música está en camino! 🎧🔥""")
         
         with st.spinner("🎧 Analizando tu perfil musical... 🔍"):
             spot.generate_current_user(sp)
@@ -238,7 +242,7 @@ def pantalla_dashboard():
         }
         </style>
     """, unsafe_allow_html=True)
-    sp = spotipy.Spotify(auth=st.session_state["spotify_token"])
+    sp = spotipy.Spotify(auth=st.session_state["spotify_token"],requests_timeout=60)
     user_info = sp.current_user()
     user_id = user_info["id"]
     st.session_state["user_id"] = user_id

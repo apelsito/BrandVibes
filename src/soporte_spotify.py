@@ -12,44 +12,22 @@ from tqdm import tqdm  # Barra de progreso para seguir el avance de iteraciones 
 
 import pandas as pd  # Para manipulación y análisis de datos tabulares (DataFrames).
 import numpy as np  # Para cálculos matemáticos y manejo de matrices.
-import datetime  # Para trabajar con fechas y horas.
 
 # Codificación y tiempo
 # -----------------------------------------------------------------------
 
 import base64  # Para codificar y decodificar datos en formato base64.
 from time import sleep, time  # `sleep` para pausar la ejecución y `time` para medir tiempos.
-import random  # Para generar valores aleatorios, útil en pausas para evitar detección de scraping.
 
 # Automatización de navegadores web con Selenium
 # -----------------------------------------------------------------------
 
 from selenium import webdriver  # Para controlar navegadores web de forma automatizada.
-from webdriver_manager.chrome import ChromeDriverManager  
-# Instala automáticamente el controlador de Chrome, evitando configuraciones manuales.
-
-from selenium.webdriver.common.keys import Keys  
-# Para simular eventos de teclado, como presionar Enter, Tab, etc.
-
-from selenium.webdriver.support.ui import Select  
-# Para interactuar con menús desplegables (<select>) en páginas web.
-
-from selenium.webdriver.support.ui import WebDriverWait  
-# Espera explícita para garantizar que ciertos elementos estén presentes antes de interactuar.
-
-from selenium.webdriver.support import expected_conditions as EC  
-# Para definir condiciones específicas en las esperas explícitas (e.g., visibilidad de un elemento).
-
-from selenium.common.exceptions import NoSuchElementException  
-# Excepción que ocurre cuando Selenium no encuentra un elemento en la página.
 
 # Integración con Spotify
 # -----------------------------------------------------------------------
 
 import spotipy  # Librería oficial de Spotify para interactuar con su API.
-from spotipy.oauth2 import SpotifyClientCredentials  
-# Para manejar autenticaciones basadas en cliente y credenciales secretas.
-
 from spotipy.oauth2 import SpotifyOAuth  
 # Para autenticación OAuth 2.0, necesaria para operaciones avanzadas como acceso a datos privados.
 
@@ -67,10 +45,6 @@ from dotenv import load_dotenv
 load_dotenv(dotenv_path="../")  
 # Especifica la ubicación del archivo `.env` que contiene las variables de entorno.
 
-# Interfaz y manejo de fechas
-# -----------------------------------------------------------------------
-from datetime import datetime  
-# Manejo de fechas y horas de forma más avanzada y con múltiples formatos.
 
 def load_credentials():
     """
