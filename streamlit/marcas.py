@@ -12,7 +12,7 @@ import os
 # Para modificar las rutas de búsqueda de módulos
 import sys  
 # Agrega el directorio padre ("../") al sistema de rutas de búsqueda de módulos, permitiendo importar módulos desde ahí
-sys.path.append("../")  
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 #######################################################################################
 ##            Funciones personalizadas para la interfaz de usuario de Streamlit     ##
