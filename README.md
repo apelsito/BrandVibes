@@ -1,12 +1,35 @@
-# BrandVibes - Proyecto Final: Conectando Música y Moda con Inteligencia de Datos 🎧
+# BrandVibes: Tu música, tu estilo, tu marca. 🎧
 
-## Descripción del Proyecto 💡
+## 💡 Descripción del Proyecto
 
-BrandVibes es una plataforma innovadora que aprovecha el poder de la música para conectar usuarios y marcas de moda a través del análisis de sus preferencias en Spotify. El proyecto combina data science, machine learning, web scraping y visualización interactiva para ofrecer recomendaciones de marcas personalizadas y herramientas de análisis de mercado para empresas de moda.
+BrandVibes es una plataforma innovadora que aprovecha el poder de la música para conectar usuarios y marcas de moda a través del análisis de sus preferencias en Spotify. Al utilizar tecnologías avanzadas de **data science, machine learning, web scraping y visualización interactiva**, el sistema genera recomendaciones personalizadas y ofrece herramientas de análisis de mercado que optimizan la toma de decisiones para empresas del sector moda.
+
+El proyecto se basa en la premisa de que la música es un reflejo de la personalidad y las emociones de los individuos. Así como los géneros y artistas favoritos pueden indicar estados de ánimo y preferencias estéticas, también pueden revelar afinidades con determinadas marcas y estilos de moda. **BrandVibes aprovecha esta conexión entre la identidad musical y la identidad de marca** para ofrecer una experiencia de compra y marketing mucho más segmentada y efectiva.
+
+El sistema se compone de dos aplicaciones:
+1. **BrandVibes for Users**: Un servicio de recomendación que permite a los usuarios conectar su cuenta de Spotify y descubrir qué marcas encajan con su estilo musical.
+2. **BrandVibes for Brands**: Un dashboard interactivo que permite a las marcas analizar el perfil musical de su audiencia y utilizar esos datos para estrategias de marketing, colaboraciones con artistas y optimización de experiencias en tienda.
 
 ## 🔥 Objetivo del Proyecto
 
-El propósito de BrandVibes es transformar el consumo de moda utilizando la música como indicador de identidad y afinidad personal. Se basa en la idea de que los estilos musicales reflejan en gran medida la personalidad y las preferencias de los consumidores, lo que permite a las marcas crear estrategias de marketing más personalizadas, colaboraciones con artistas relevantes y experiencias inmersivas para sus clientes.
+El propósito de BrandVibes es **transformar la industria de la moda utilizando la música como un indicador clave de identidad y afinidad personal**. Nuestra hipótesis fundamental es que los consumidores eligen su vestimenta de manera similar a como eligen su música: según su identidad, estado de ánimo y percepción de la marca.
+
+A través de este enfoque, BrandVibes ofrece valor tanto a los usuarios como a las marcas:
+
+### 🌍 Para los Usuarios:
+- Descubren qué marcas se alinean mejor con su identidad musical.
+- Reciben recomendaciones basadas en datos reales de su actividad en Spotify.
+- Exploran nuevas marcas y tendencias afines a su estilo.
+
+### 📈 Para las Marcas:
+- **Segmentación avanzada de audiencia**: Las marcas pueden definir perfiles de clientes basados en afinidades musicales, permitiendo estrategias de marketing más personalizadas.
+- **Colaboraciones estratégicas con artistas**: Al identificar qué músicos escuchan sus seguidores, las marcas pueden seleccionar embajadores que representen auténticamente su identidad.
+- **Optimización de experiencia en tienda**: Se pueden curar playlists específicas para generar una atmósfera en los espacios físicos alineada con el público objetivo.
+- **Benchmarking y análisis de competencia**: Comparando su perfil de seguidores con otras marcas, pueden detectar oportunidades de mercado y ajustar su comunicación.
+
+---
+
+## 🏗️ Estructura del Sistema
 
 El sistema se divide en dos módulos principales:
 
@@ -32,8 +55,28 @@ Los usuarios pueden vincular su cuenta de Spotify para obtener un análisis deta
 
 #### 📌 Algoritmo de Recomendación de Marcas
 
-Se compara el perfil del usuario con las bases de datos de seguidores de marcas analizados previamente. Se calcula una distancia euclidiana entre los vectores de afinidad musical de cada usuario y el perfil musical agregado de cada marca. Se genera un porcentaje de afinidad que indica qué marcas tienen una audiencia similar a los gustos del usuario.
-
+1. **Buscamos los artistas comunes**
+   - Dejando únicamente aquellos que coinciden con su posición en cada ranking.
+2. **Asignamos pesos según su posición en el ranking**
+   - Fórmula utilizada:
+   $$
+   peso = \frac{1}{\text{posición}}
+   $$
+   - No buscamos complejidad, buscamos que funcione de momento.
+3. **Normalizamos los pesos**
+   - Dado que la longitud y ranking es distinto, debemos normalizar los pesos a la misma escala.
+   - De esta forma nos aseguramos de que el cálculo de la afinidad es justo.
+   - Fórmula utilizada:
+   $$
+   peso\_normalizado = \frac{peso\_original}{\sum peso\_original}
+   $$
+   - Ahora los pesos están a la misma escala.
+4. **Poner como index artista y peso se queda como columna**.
+5. **Ordenamos los artistas para que los vectores estén alineados**.
+6. **Creamos Matriz de Comparación**.
+7. **Calculamos las distancias con `pdist` y `squareform`**.
+8. **Extraemos distancias**.
+9. **Obtenemos Porcentaje de Afinidad**.
 ### 🔵 2. BrandVibes for Brands: Análisis de Seguidores y Estrategias de Marketing Musical
 
 Este módulo está diseñado para marcas de ropa que buscan comprender el perfil musical de sus seguidores y mejorar su estrategia de branding mediante insights basados en datos.
@@ -53,40 +96,63 @@ Este módulo está diseñado para marcas de ropa que buscan comprender el perfil
    - Análisis de afinidad cruzada para ver qué marcas comparten público similar.
    - Identificación de oportunidades para colaboraciones o diferenciación estratégica.
 
-#### 📊 Visualización en Dashboards Empresariales
+### 🌐 Aplicaciones Web
+BrandVibes cuenta con dos aplicaciones web desplegadas en Streamlit:
+- **Para Usuarios** (descubre qué marcas se alinean con tu perfil musical): [BrandVibes User](https://brandvibes.streamlit.app/)
+- **Para Marcas** (analiza a tu audiencia y mejora tu estrategia de branding): [BrandVibes Business](https://vibes4brands.streamlit.app/)
 
-Cada marca tiene acceso a una plataforma en Streamlit donde puede:
-- Ver en tiempo real el perfil musical agregado de sus seguidores.
-- Explorar gráficos interactivos con rankings de artistas, géneros y BPMs.
-- Comparar su perfil con otras marcas y encontrar insights estratégicos.
+Ambas aplicaciones utilizan Supabase como base de datos para almacenar y consultar la información de usuarios y marcas, asegurando una experiencia fluida e interactiva para todos los participantes del ecosistema BrandVibes.
 
 ## 📁 Estructura del Proyecto
 
 ```bash
 BrandVibes/
-├── .env                        # Archivo de configuración de variables de entorno.
-├── .gitignore                  # Archivos y directorios ignorados por Git.
-├── conda-cheatsheet.txt        # Hoja de referencia rápida para comandos de conda.
-├── datos/                      # Archivos de datos CSV y PKL para el proyecto.
-│   ├── 00_Spotify_Genres/
-│   ├── 01_Spotify/
-│   ├── 02_Base_de_Datos/
+└── .devcontainer/
+│  │
+│  └── devcontainer.json # Archivos necesarios para la ejecución en streamlit
 │
-├── jupyter-notebooks/          # Notebooks de Jupyter con los análisis y modelos.
-│   ├── recomendacion_por_artista.ipynb
-│   ├── sistema_recomendacion_por_genero.ipynb
+├── datos/                      # Archivos de datos CSV para el proyecto.
+│   ├── 00_Spotify_Genres/      # Diccionario de Géneros, para posterior mapeo
+│   ├── 01_Spotify/             # Estructura de carpetas usada para la extracción de datos de marcas
+│   ├── 02_Base_de_Datos/       # Usado para generar la base de datos
 │
-├── src/                        # Archivos .py para funciones auxiliares del proyecto.
+├── jupyter-notebooks/          # Para extracción datos de marcas + generar funciones
+│   ├── 01_obtener_ids_followers_spotify.ipynb 
+│   ├── 02_obtener_listas_spotify.ipynb
+│   ├── 03_obtener_id_artistas.ipynb
+│   ├── 04_preparar_tabla_resumen.ipynb
+│   ├── 05_obtener_generos_artistas.ipynb
+│   ├── 06_base_de_datos.ipynb
+│   ├── 07_tablas_generos_base_de_datos.ipynb
+│   ├── 08_Como_Usar_Funciones_SQL.ipynb
+│   ├── 09_obtener_resto_marcas.ipynb
+│   ├── 10_subir_resto_marcas.ipynb
+│   ├── 11_base_datos_usuario.ipynb
+│   ├── 12_obtener_datos_ejemplo.ipynb
+│   ├── 13_recomendacion_por_artista_1.ipynb
+│   ├── 14_sistema_recomendacion_por_artista.ipynb # Aquí se explican las fórmulas utilizadas para el cálculo de afinidad
+│   ├── 15_sistema_recomendacion_por_genero.ipynb
+│   └── 16_sistema_recomendacion_por_subgenero.ipynb   
+│   
+├── src/
+│   ├── soporte_extraccion_datos.py
 │   ├── soporte_spotify.py
 │   ├── soporte_sql.py
-│   ├── soporte_streamlit_usuarios.py
 │   ├── soporte_streamlit_marcas.py
+│   ├── soporte_streamlit_usuarios.py
+│   └── soporte_subida_datos_sql.py 
 │
-├── streamlit/                  # Aplicaciones de Streamlit para visualización de datos.
-│   ├── usuarios.py
-│   ├── marcas.py
+├── streamlit/
+│   ├── 00_solucion_problemas_autenticación.ipynb # Explicación sobre solución a problemas de auth de Spotify 
+│   ├── marcas.py               # Streamlit de Marcas (BranVibes Business)
+│   └── usuarios.py             # Streamlit del usuario (BrandVibes User)
 │
-└── README.md                   # Descripción del proyecto, instrucciones de instalación y uso.
+│                  
+├── .gitignore                  # Archivos y directorios ignorados por Git.
+│
+├── README.md                   # ¡Lo estás leyendo!
+│
+└── requirements.txt            # Archivo para instalar dependencias necesarias en streamlit    
 ```
 ## Instalación y Requisitos 🛠️
 
