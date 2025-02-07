@@ -131,7 +131,7 @@ def pantalla_bienvenida():
         # auth_code puede ser una lista; tomamos el primer valor.
         if isinstance(auth_code, list):
             auth_code = auth_code[0]
-        token_info = sp_oauth.get_access_token(auth_code, as_dict=False, check_cache=False)
+        token_info = sp_oauth.get_access_token(auth_code, as_dict=False, check_cache=False,)
         st.session_state["token_info"] = token_info
         st.session_state["spotify_token"] = token_info
 
@@ -153,33 +153,53 @@ def pantalla_primera_vez():
     sp = spotipy.Spotify(auth=st.session_state["spotify_token"],requests_timeout=60)
     user_id = st.session_state["user_id"]
 
-    # Comprobamos si el usuario ya existe en la BD.
-    user_check = supabase.table("users").select("user_id").eq("user_id", user_id).execute().data
+    # Verificamos si los datos ya existen en la BD
+    checks = {
+        "users": supabase.table("users").select("user_id").eq("user_id", user_id).execute().data,
+        "tracks_user_likes": supabase.table("tracks_user_likes").select("user_id").eq("user_id", user_id).execute().data,
+        "top_tracks": supabase.table("top_tracks").select("user_id").eq("user_id", user_id).execute().data,
+        "user_artists_ranking": supabase.table("user_artists_ranking").select("user_id").eq("user_id", user_id).execute().data,
+        "user_subgenres": supabase.table("user_subgenres").select("user_id").eq("user_id", user_id).execute().data,
+        "user_main_genres": supabase.table("user_main_genres").select("user_id").eq("user_id", user_id).execute().data
+    }
 
-    if not user_check:
+    if all(checks.values()):
+        st.session_state["current_page"] = "dashboard"
+        st.rerun()        
+
+    else:
         st.title(f"🎵 Obteniendo tu información - Deja esta pestaña abierta!")
         st.warning("⚠️ ¡Es tu Primera Vez! Vamos a analizar tu música y prepararte algo épico... 🎧🔥")
         st.info("""💡 Este proceso puede llevar algunos minutos. La velocidad dependerá de tu conexión a internet y del tiempo de respuesta de Spotify.  
-  
+
                 ☕ Relájate, tómate algo y deja que nos encarguemos del resto. ¡Tu música está en camino! 🎧🔥""")
         
         with st.spinner("🎧 Analizando tu perfil musical... 🔍"):
-            spot.generate_current_user(sp)
+            # Comprobamos si el usuario ya existe en la BD.
+            if not checks["users"]:
+                spot.generate_current_user(sp)
         st.success("✅ ¡Listo! Tu identidad sonora está en marcha. 🚀")
 
         with st.spinner("🎼 Recorriendo tu biblioteca musical... 📀"):
-            spot.generate_all_saved_tracks(sp)
+            if not checks["tracks_user_likes"]:
+                sp = spotipy.Spotify(auth=st.session_state["spotify_token"],requests_timeout=60)
+                spot.generate_all_saved_tracks(sp)
         st.success("✅ Tus canciones guardadas están listas. 🎶")
 
         with st.spinner("📊 Identificando los temazos más escuchados... 🔥"):
-            spot.generate_all_top_tracks(sp)
+            if not checks["top_tracks"]:
+                spot.generate_all_top_tracks(sp)
         st.success("✅ ¡Top tracks detectados! Estos son tus esenciales. 🎵")
 
         with st.spinner("🏆 Construyendo tu ranking de artistas... 🎤"):
-            spot.generate_user_artist_ranking(sp, supabase)
+            if not checks["user_artists_ranking"]:
+                spot.generate_user_artist_ranking(sp, supabase)
         st.success("✅ Tus artistas favoritos ya tienen su podio. 🏅")
 
         with st.spinner("🎙️ Afinando géneros y subgéneros... 🎚️"):
+            # Borramos por si hubiera algo aquí!
+            supabase.table("user_subgenres").delete().eq("user_id", user_id).execute()
+            supabase.table("user_main_genres").delete().eq("user_id", user_id).execute()
             spot.generate_user_genre_and_subgenre_ranking(sp, supabase)
         st.success("✅ ¡Todo listo! Tu ADN musical está completo. ⚡")
 
@@ -202,10 +222,6 @@ def pantalla_primera_vez():
             st.rerun()
         else:
             st.error("❌ Hubo un error al crear tu usuario. Por favor, intenta nuevamente.")
-    else:
-        # Si el usuario ya existe, pasamos directamente al dashboard.
-        st.session_state["current_page"] = "dashboard"
-        st.rerun()
 
 # ============================================================================
 # PANTALLA 3: Dashboard (vista principal)
