@@ -97,7 +97,7 @@ sp_oauth = SpotifyOAuth(
     show_dialog=True
 )
 
-st.set_page_config(page_title="BrandVibes - Tu identidad musical", page_icon="🎧")
+st.set_page_config(page_title="BrandVibes - Tu identidad musical", page_icon="📀")
 
 # ============================================================================
 # PANTALLA 1: Bienvenida e inicio de sesión
