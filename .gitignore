@@ -1,3 +1,9 @@
+# Eliminar archivos del repo (No son necesarios)
+datos/00_Spotify_Genres/01_generos_no_identificados_zara.csv
+datos/01 Spotify
+datos/02 Base de Datos
+src/videos
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
