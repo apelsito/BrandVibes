@@ -55,28 +55,8 @@ Los usuarios pueden vincular su cuenta de Spotify para obtener un análisis deta
 
 #### 📌 Algoritmo de Recomendación de Marcas
 
-1. **Buscamos los artistas comunes**
-   - Dejando únicamente aquellos que coinciden con su posición en cada ranking.
-2. **Asignamos pesos según su posición en el ranking**
-   - Fórmula utilizada:
-   $$
-   peso = \frac{1}{\text{posición}}
-   $$
-   - No buscamos complejidad, buscamos que funcione de momento.
-3. **Normalizamos los pesos**
-   - Dado que la longitud y ranking es distinto, debemos normalizar los pesos a la misma escala.
-   - De esta forma nos aseguramos de que el cálculo de la afinidad es justo.
-   - Fórmula utilizada:
-   $$
-   peso\_normalizado = \frac{peso\_original}{\sum peso\_original}
-   $$
-   - Ahora los pesos están a la misma escala.
-4. **Poner como index artista y peso se queda como columna**.
-5. **Ordenamos los artistas para que los vectores estén alineados**.
-6. **Creamos Matriz de Comparación**.
-7. **Calculamos las distancias con `pdist` y `squareform`**.
-8. **Extraemos distancias**.
-9. **Obtenemos Porcentaje de Afinidad**.
+Se compara el perfil del usuario con las bases de datos de seguidores de marcas analizados previamente. Se calcula una distancia euclidiana entre los vectores de afinidad musical de cada usuario y el perfil musical agregado de cada marca. Se genera un porcentaje de afinidad que indica qué marcas tienen una audiencia similar a los gustos del usuario.
+
 ### 🔵 2. BrandVibes for Brands: Análisis de Seguidores y Estrategias de Marketing Musical
 
 Este módulo está diseñado para marcas de ropa que buscan comprender el perfil musical de sus seguidores y mejorar su estrategia de branding mediante insights basados en datos.
@@ -102,6 +82,8 @@ BrandVibes cuenta con dos aplicaciones web desplegadas en Streamlit:
 - **Para Marcas** (analiza a tu audiencia y mejora tu estrategia de branding): [BrandVibes Business](https://vibes4brands.streamlit.app/)
 
 Ambas aplicaciones utilizan Supabase como base de datos para almacenar y consultar la información de usuarios y marcas, asegurando una experiencia fluida e interactiva para todos los participantes del ecosistema BrandVibes.
+
+---
 
 ## 📁 Estructura del Proyecto
 
@@ -154,11 +136,9 @@ BrandVibes/
 │
 └── requirements.txt            # Archivo para instalar dependencias necesarias en streamlit    
 ```
-## Instalación y Requisitos 🛠️
+---
 
-### Requisitos
-
-Para ejecutar este proyecto, asegúrate de tener instalado lo siguiente:
+## 🛠 Tecnologías Utilizadas
 
 - **Python 3.x** 🐍
 - **Jupyter Notebook** 📓 para ejecutar y visualizar los análisis de datos
@@ -171,60 +151,15 @@ Para ejecutar este proyecto, asegúrate de tener instalado lo siguiente:
     - [supabase](https://supabase.io/docs) para la integración con la base de datos Supabase 🌟
     - [streamlit](https://streamlit.io/) para la creación de dashboards interactivos 🌐
     - [dotenv](https://pypi.org/project/python-dotenv/) para la gestión de variables de entorno 🛠️
+    - [spotipy](https://spotipy.readthedocs.io/en/2.16.1/) para la interacción con la API de Spotify 🎶
+    - [psycopg2](https://www.psycopg.org/docs/) para la conexión y manipulación de bases de datos PostgreSQL 🛢️
+    - [selenium](https://www.selenium.dev/documentation/) para la automatización del scraping de datos 🔍
+    - [requests](https://docs.python-requests.org/en/latest/) para realizar solicitudes HTTP 🌐
+- **Plataformas**:
+    - **Supabase** como base de datos 🚀
+    - **Streamlit Cloud** para el despliegue de las aplicaciones 🌍
 
-### Instalación 🛠️
-
-1. Clona este repositorio:
-    ```bash
-    git clone <URL_DEL_REPOSITORIO>
-    cd BrandVibes
-    ```
-
-2. Instala las dependencias:
-    ```bash
-    pip install -r requirements.txt
-    ```
-
-3. Configura las variables de entorno en el archivo [.env](http://_vscodecontentref_/0):
-    ```env
-    project_url=your_project_url
-    browser_safe_key=your_browser_safe_key
-    ```
-
-## Uso
-
-### Jupyter Notebooks
-
-Los notebooks en la carpeta [jupyter-notebooks](http://_vscodecontentref_/1) contienen los pasos para la extracción, procesamiento y análisis de datos. Algunos de los notebooks más importantes son:
-
-- `recomendacion_por_artista.ipynb`: Implementa el sistema de afinidad basado en artistas.
-- `sistema_recomendacion_por_genero.ipynb`: Implementa la recomendación basada en géneros musicales.
-
-### Scripts
-
-Los scripts en la carpeta [src](http://_vscodecontentref_/2) contienen funciones y utilidades para la manipulación de datos y la interacción con la base de datos:
-
-- `soporte_spotify.py`: Módulo que maneja la autenticación y extracción de datos de Spotify.
-- `soporte_sql.py`: Funciones para manejo de la base de datos en Supabase.
-- `soporte_streamlit_usuarios.py`: Funciones específicas para el dashboard de usuarios.
-- `soporte_streamlit_marcas.py`: Funciones específicas para el dashboard de marcas.
-
-### Streamlit
-
-La carpeta [streamlit](http://_vscodecontentref_/3) contiene aplicaciones de Streamlit para la visualización de datos:
-
-- `usuarios.py`: Dashboard de usuarios donde pueden ver su perfil musical y afinidad con marcas.
-- `marcas.py`: Dashboard de marcas donde las empresas pueden analizar a sus seguidores.
-
-Para ejecutar la aplicación de Streamlit, usa el siguiente comando:
-```bash
-streamlit run streamlit/usuarios.py
-```
-## Contribuciones 🤝
-
-Las contribuciones a este proyecto son muy bienvenidas. Si tienes alguna sugerencia, mejora o corrección, no dudes en ponerte en contacto o enviar tus ideas.
-
-Cualquier tipo de contribución, ya sea en código, documentación o feedback, será valorada. ¡Gracias por tu ayuda y colaboración!
+---
 
 ## Autores y Agradecimientos ✍️
 
@@ -232,7 +167,7 @@ Cualquier tipo de contribución, ya sea en código, documentación o feedback, s
 **Gonzalo Ruipérez Ojea** - [@apelsito](https://github.com/apelsito) en github
 
 ### Agradecimientos ❤️
-Quiero expresar mi agradecimiento a mis profesores [@Ana_Garcia](https://github.com/AnaAGG) y [@Jean-Charles](https://github.com/yamadajc) no solo por las herramientas y conocimientos que me han enseñado, sino por haber sido un pilar fundamental para el desarrollo de este proyecto.
+Quiero expresar mi agradecimiento a mis profesores Ana García y Jean-Charles no solo por las herramientas y conocimientos que me han enseñado, sino por haber sido un pilar fundamental para el desarrollo de este proyecto.
 
 Gracias por su paciencia, por cada explicación, por cada guía cuando parecía que el camino se volvía más difícil. Gracias por el apoyo constante, por la confianza que depositaron en mí y por enseñarme que la excelencia no es solo un resultado, sino una mentalidad.
 
