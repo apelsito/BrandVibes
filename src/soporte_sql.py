@@ -1,40 +1,54 @@
+#######################################################################################
+##            Importación de bibliotecas para la conexión a bases de datos           ##
+#######################################################################################
 # Importar psycopg2 para la conexión y manejo de bases de datos PostgreSQL
-# -----------------------------------------------------------------------
 import psycopg2
 
+#######################################################################################
+##            Manejo de errores específicos de psycopg2                             ##
+#######################################################################################
 # Importar manejo de errores específicos de psycopg2
-# -----------------------------------------------------------------------
-from psycopg2 import OperationalError, errorcodes, errors  
-# Permite capturar y manejar errores como fallos de conexión, errores en las consultas, etc.
+from psycopg2 import OperationalError, errorcodes
 
+
+#######################################################################################
+##            Carga de variables de entorno                                        ##
+#######################################################################################
 # Importar dotenv para cargar variables de entorno desde un archivo .env
-# -----------------------------------------------------------------------
 from dotenv import load_dotenv
 
 # Importar os para acceder a variables de entorno del sistema
-# -----------------------------------------------------------------------
 import os
 
+#######################################################################################
+##            Manipulación y análisis de datos tabulares                           ##
+#######################################################################################
 # Importar pandas para manipulación y análisis de datos tabulares
-# -----------------------------------------------------------------------
 import pandas as pd
 
+#######################################################################################
+##            Configuración y manejo de advertencias                                ##
+#######################################################################################
 # Ignorar warnings
-# -----------------------------------------------------------------------
 import warnings
 warnings.filterwarnings("ignore")  # Suprime advertencias, manteniendo la salida de consola más limpia.
 
+#######################################################################################
+##            Carga de credenciales de la base de datos                             ##
+#######################################################################################
 # Cargar las variables de entorno desde un archivo .env
-# -----------------------------------------------------------------------
 load_dotenv()
 
 # Obtener credenciales de la base de datos desde las variables de entorno
-# -----------------------------------------------------------------------
 USER = os.getenv("dbuser")          # Usuario de la base de datos
 PASSWORD = os.getenv("dbpassword")  # Contraseña del usuario
 HOST = os.getenv("dbhost")          # Dirección del servidor de la base de datos
 PORT = os.getenv("dbport")          # Puerto del servidor de la base de datos
 DBNAME = os.getenv("dbname")        # Nombre de la base de datos
+
+#######################################################################################
+##            Fin de los Imports                                                     ##
+#######################################################################################
 
 
 def conectar_bd():

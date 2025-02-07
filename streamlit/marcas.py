@@ -1,10 +1,41 @@
-import streamlit as st
-import os
-import sys
-sys.path.append("../")
-import src.soporte_streamlit_marcas as sp
-from supabase import create_client, Client
-from dotenv import load_dotenv
+#######################################################################################
+##            Librerías para la creación de la interfaz de usuario en Streamlit     ##
+#######################################################################################
+# Librería para crear la interfaz de usuario en Streamlit
+import streamlit as st  
+
+#######################################################################################
+##            Manejo del sistema y rutas de archivos                              ##
+#######################################################################################
+# Para interactuar con el sistema operativo (rutas, variables de entorno, etc.)
+import os  
+# Para modificar las rutas de búsqueda de módulos
+import sys  
+# Agrega el directorio padre ("../") al sistema de rutas de búsqueda de módulos, permitiendo importar módulos desde ahí
+sys.path.append("../")  
+
+#######################################################################################
+##            Funciones personalizadas para la interfaz de usuario de Streamlit     ##
+#######################################################################################
+# Funciones personalizadas para manejar la interfaz de marcas en Streamlit
+import src.soporte_streamlit_marcas as sp  
+
+#######################################################################################
+##            Conexión con la base de datos Supabase                               ##
+#######################################################################################
+# Para crear un cliente y manejar la conexión con Supabase
+from supabase import create_client, Client  
+
+#######################################################################################
+##            Manejo de variables de entorno                                      ##
+#######################################################################################
+# Para cargar las variables de entorno desde un archivo .env
+from dotenv import load_dotenv  
+
+#######################################################################################
+##            Fin de los Imports                                                   ##
+#######################################################################################
+
 
 # ============================================================================
 # 1. CONFIGURACIÓN INICIAL

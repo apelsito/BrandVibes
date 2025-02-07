@@ -1,17 +1,54 @@
-import streamlit as st
-from supabase import create_client, Client
-import spotipy
-import time
-from spotipy.oauth2 import SpotifyOAuth
-import sys
-import os
-#sys.path.append("../")
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-import src.soporte_streamlit_usuarios as spot
+#######################################################################################
+##            Librerías para la creación de la interfaz de usuario en Streamlit     ##
+#######################################################################################
+# Librería para crear la interfaz de usuario en Streamlit
+import streamlit as st  
 
+#######################################################################################
+##            Conexión con la base de datos Supabase                               ##
+#######################################################################################
+# Para crear un cliente y manejar la conexión con Supabase
+from supabase import create_client, Client  
+
+#######################################################################################
+##            Integración con Spotify                                            ##
+#######################################################################################
+# Librería de Spotify para interactuar con su API
+import spotipy  
+# Para autenticación OAuth 2.0, necesaria para acceder a los datos privados del usuario
+from spotipy.oauth2 import SpotifyOAuth  
+
+#######################################################################################
+##            Manejo del tiempo y sistema                                         ##
+#######################################################################################
+# Para pausar la ejecución y medir tiempos
+import time  
+# Para modificar las rutas de búsqueda de módulos
+import sys  
+# Para interactuar con el sistema operativo (rutas, variables de entorno, etc.)
+import os  
+
+# Agrega el directorio padre ("../") al sistema de rutas de búsqueda de módulos, permitiendo importar módulos desde ahí
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
+#######################################################################################
+##            Funciones personalizadas para la interfaz de usuario de Streamlit     ##
+#######################################################################################
+# Funciones personalizadas para manejar la interfaz de usuario relacionada con los usuarios
+import src.soporte_streamlit_usuarios as spot  
+
+#######################################################################################
+##            Manejo de variables de entorno                                      ##
+#######################################################################################
+# Para cargar las variables de entorno desde un archivo .env
 from dotenv import load_dotenv  
+
+# Cargar las variables de entorno
 load_dotenv()  
 
+#######################################################################################
+##            Configuración de Supabase y Spotify                                 ##
+#######################################################################################
 # Configuración de Supabase
 url = os.getenv("project_url")
 key = os.getenv("browser_safe_key")
@@ -20,14 +57,19 @@ supabase: Client = create_client(url, key)
 # Configuración de Spotify
 CLIENT_ID = os.getenv("client_ID")
 CLIENT_SECRET = os.getenv("client_Secret")
-REDIRECT_URI = os.getenv("redirect_url")  # Asegúrate de registrarlo en Spotify Developer
+REDIRECT_URI = os.getenv("redirect_url")
 SCOPES = (
     "user-read-private user-read-email user-library-read "
     "playlist-read-private playlist-read-collaborative "
     "user-top-read user-read-recently-played "
     "user-read-currently-playing user-read-playback-state "
-    "streaming user-follow-read"
+    "user-follow-read"
 )
+
+#######################################################################################
+##            Fin de los Imports                                                   ##
+#######################################################################################
+
 
 # Inicializar la sesión en Streamlit
 if "token_info" not in st.session_state:

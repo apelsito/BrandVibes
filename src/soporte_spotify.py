@@ -1,49 +1,64 @@
-# Importamos las librerías necesarias para el proyecto
+#######################################################################################
+##            Librerías de extracción de datos                                    ##
+#######################################################################################
+# Para analizar y extraer información de HTML o XML.
+from bs4 import BeautifulSoup  
+# Para realizar solicitudes HTTP a páginas web.
+import requests  
+# Barra de progreso para seguir el avance de iteraciones o procesos largos.
+from tqdm import tqdm  
 
-# Librerías de extracción de datos
-# -----------------------------------------------------------------------
+#######################################################################################
+##            Tratamiento de datos                                                 ##
+#######################################################################################
+# Para manipulación y análisis de datos tabulares (DataFrames).
+import pandas as pd  
+# Para cálculos matemáticos y manejo de matrices.
+import numpy as np  
 
-from bs4 import BeautifulSoup  # Para analizar y extraer información de HTML o XML.
-import requests  # Para realizar solicitudes HTTP a páginas web.
-from tqdm import tqdm  # Barra de progreso para seguir el avance de iteraciones o procesos largos.
+#######################################################################################
+##            Codificación y manejo del tiempo                                    ##
+#######################################################################################
+# Para codificar y decodificar datos en formato base64.
+import base64  
+# `sleep` para pausar la ejecución y `time` para medir tiempos.
+from time import sleep, time  
 
-# Tratamiento de datos
-# -----------------------------------------------------------------------
+#######################################################################################
+##            Automatización de navegadores web con Selenium                      ##
+#######################################################################################
+# Para controlar navegadores web de forma automatizada.
+from selenium import webdriver  
 
-import pandas as pd  # Para manipulación y análisis de datos tabulares (DataFrames).
-import numpy as np  # Para cálculos matemáticos y manejo de matrices.
-
-# Codificación y tiempo
-# -----------------------------------------------------------------------
-
-import base64  # Para codificar y decodificar datos en formato base64.
-from time import sleep, time  # `sleep` para pausar la ejecución y `time` para medir tiempos.
-
-# Automatización de navegadores web con Selenium
-# -----------------------------------------------------------------------
-
-from selenium import webdriver  # Para controlar navegadores web de forma automatizada.
-
-# Integración con Spotify
-# -----------------------------------------------------------------------
-
-import spotipy  # Librería oficial de Spotify para interactuar con su API.
-from spotipy.oauth2 import SpotifyOAuth  
+#######################################################################################
+##            Integración con Spotify                                            ##
+#######################################################################################
+# Librería oficial de Spotify para interactuar con su API.
+import spotipy  
 # Para autenticación OAuth 2.0, necesaria para operaciones avanzadas como acceso a datos privados.
+from spotipy.oauth2 import SpotifyOAuth  
 
-# Manejo del sistema y variables de entorno
-# -----------------------------------------------------------------------
-import os  # Para interactuar con el sistema operativo (rutas, variables de entorno, etc.).
-import sys  # Para modificar y trabajar con la configuración del entorno de Python.
+#######################################################################################
+##            Manejo del sistema y variables de entorno                          ##
+#######################################################################################
+# Para interactuar con el sistema operativo (rutas, variables de entorno, etc.).
+import os  
+# Para modificar y trabajar con la configuración del entorno de Python.
+import sys  
 
-sys.path.append("../")  
 # Agrega el directorio padre ("../") al sistema de rutas de búsqueda de módulos, permitiendo importar módulos desde ahí.
+sys.path.append("../")  
 
-from dotenv import load_dotenv  
 # Carga las variables de entorno definidas en un archivo `.env` para configuraciones sensibles como credenciales.
+from dotenv import load_dotenv  
 
-load_dotenv(dotenv_path="../")  
 # Especifica la ubicación del archivo `.env` que contiene las variables de entorno.
+load_dotenv(dotenv_path="../")  
+
+#######################################################################################
+##            Fin de los Imports                                                   ##
+#######################################################################################
+
 
 
 def load_credentials():
@@ -473,24 +488,6 @@ def obtener_algunas_playlists(sp, user_id):
             playlists = None
     
     return dictio
-
-# def request_segura(url, token):
-#     """
-#     Verifica si la API de Spotify está disponible.
-#     Si devuelve 200, devuelve True.
-#     Si devuelve 429, espera el tiempo necesario.
-#     """
-#     while True:
-#         response = requests.get(url, headers={"Authorization": f"Bearer {token}"})
-#         if response.status_code == 200:
-#             return True
-#         elif response.status_code == 429:
-#             retry_after = int(response.headers.get("Retry-After", 1))
-#             print(f"Error 429: Rate limit alcanzado. Esperando {retry_after} segundos...")
-#             sleep(retry_after)
-#         else:
-#             print(f"Error {response.status_code}. Verifica la solicitud.")
-#             return False  # No se pudo procesar
 
 def obtener_artistas(token, lista_ids_playlists):
     """

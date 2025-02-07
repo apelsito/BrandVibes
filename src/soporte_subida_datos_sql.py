@@ -1,25 +1,59 @@
+#######################################################################################
+##            Modificar el sistema de rutas para permitir importar módulos desde el directorio padre ##
+#######################################################################################
 # Modificar el sistema de rutas para permitir importar módulos desde el directorio padre
-# --------------------------------
 import sys 
 sys.path.append("../")
 
+#######################################################################################
+##            Importación de módulos personalizados para manejo de bases de datos SQL ##
+#######################################################################################
 # Importar el módulo personalizado para manejo de bases de datos SQL
-# --------------------------------
 import src.soporte_sql as sql
 
+#######################################################################################
+##            Importación de bibliotecas para manipulación y análisis de datos         ##
+#######################################################################################
 # Importar la biblioteca pandas para manipulación y análisis de datos tabulares
-# --------------------------------
 import pandas as pd
 
 # Importar la biblioteca JSON para trabajar con datos en formato JSON
-# --------------------------------
 import json
 
 # Importar la biblioteca AST para convertir cadenas en estructuras de datos Python
-# --------------------------------
 import ast
 
+#######################################################################################
+##            Fin de los Imports                                                     ##
+#######################################################################################
+
+
 def obtener_tabla_followers(followers_df, brand_id = 0):
+    """
+    Genera una tabla de seguidores con la marca asociada para su posterior almacenamiento en la base de datos.
+
+    Parámetros:
+    ----------
+    followers_df : pandas.DataFrame
+        DataFrame que contiene la información de los seguidores, incluyendo `username` y `user_id`.
+
+    brand_id : int, opcional (por defecto 0)
+        Identificador único de la marca a la que pertenecen los seguidores.
+        Si el `brand_id` no es válido, se muestra un mensaje con los IDs de marcas disponibles.
+
+    Retorna:
+    -------
+    pandas.DataFrame
+        DataFrame con las columnas `username`, `user_id` y `brand` si el `brand_id` es válido.
+
+    Descripción:
+    -----------
+    - Consulta la base de datos para obtener la lista de marcas y sus IDs.
+    - Verifica si el `brand_id` ingresado existe en la base de datos.
+    - Si el `brand_id` no es válido, muestra un mensaje con los IDs de las marcas disponibles.
+    - Si el `brand_id` es válido, asigna la marca a los seguidores y devuelve el DataFrame resultante.
+    """
+
     conexion = sql.conectar_bd()
     query = ''' SELECT * FROM brands'''
     df = sql.consulta_sql(conexion, query)
@@ -35,11 +69,61 @@ def obtener_tabla_followers(followers_df, brand_id = 0):
     return followers_df
 
 def subir_followers(followers_df):
+    """
+    Inserta los datos de seguidores en la base de datos en la tabla `followers`.
+
+    Parámetros:
+    ----------
+    followers_df : pandas.DataFrame
+        DataFrame que contiene la información de los seguidores con las columnas `username`, `user_id` y `brand_id`.
+
+    Retorna:
+    -------
+    None
+
+    Descripción:
+    -----------
+    - Establece una conexión con la base de datos mediante `sql.conectar_bd()`.
+    - Prepara la consulta SQL para insertar los datos en la tabla `followers`.
+    - Convierte el DataFrame en una tupla para su inserción masiva en la base de datos.
+    - Inserta los datos en la base de datos usando `sql.insertar_muchos_datos()`.
+    """
+
     conexion = sql.conectar_bd()
     query = '''INSERT INTO followers(username,user_id,brand_id) VALUES (%s,%s,%s)'''
     sql.insertar_muchos_datos(conexion,query,sql.generar_tupla(followers_df))
 
 def obtener_tabla_playlists(playlists_df, brand_id = 0):
+    """
+    Genera una tabla de playlists asociadas a los seguidores de una marca para su posterior almacenamiento en la base de datos.
+
+    Parámetros:
+    ----------
+    playlists_df : pandas.DataFrame
+        DataFrame que contiene la información de las playlists, incluyendo `user_id` y `playlists`.
+
+    brand_id : int, opcional (por defecto 0)
+        Identificador único de la marca a la que pertenecen los seguidores y sus playlists.
+        Si el `brand_id` no es válido, se muestra un mensaje con los IDs de marcas disponibles.
+
+    Retorna:
+    -------
+    pandas.DataFrame
+        DataFrame con las columnas `playlist_name`, `playlist_id` y `id` (identificador del seguidor en la base de datos)
+        si el `brand_id` es válido.
+
+    Descripción:
+    -----------
+    - Consulta la base de datos para obtener la lista de marcas y sus IDs.
+    - Verifica si el `brand_id` ingresado existe en la base de datos.
+    - Si el `brand_id` no es válido, muestra un mensaje con los IDs de las marcas disponibles.
+    - Obtiene la lista de seguidores de la marca desde la base de datos.
+    - Realiza un merge entre los seguidores y sus playlists.
+    - Convierte la información de las playlists de string a diccionario (`ast.literal_eval`).
+    - Genera un DataFrame con cada playlist, asignándola a su respectivo seguidor.
+    - Devuelve un DataFrame con las columnas `playlist_name`, `playlist_id` y `id`.
+    """
+
     conexion = sql.conectar_bd()
     query = ''' SELECT * FROM brands'''
     df = sql.consulta_sql(conexion, query)
@@ -67,7 +151,7 @@ def obtener_tabla_playlists(playlists_df, brand_id = 0):
     playlist_names = []
     playlist_ids = []
 
-    for index, fila in playlists.iterrows():
+    for _, fila in playlists.iterrows():
         user_id = fila["id"]
         playlist = fila["playlists"]
 
@@ -85,11 +169,62 @@ def obtener_tabla_playlists(playlists_df, brand_id = 0):
     return playlists
 
 def subir_playlists(playlists_df):
+    """
+    Inserta los datos de playlists en la base de datos en la tabla `playlists`.
+
+    Parámetros:
+    ----------
+    playlists_df : pandas.DataFrame
+        DataFrame que contiene la información de las playlists con las columnas `playlist_name`, `playlist_id` y `follower_id`.
+
+    Retorna:
+    -------
+    None
+
+    Descripción:
+    -----------
+    - Establece una conexión con la base de datos mediante `sql.conectar_bd()`.
+    - Prepara la consulta SQL para insertar los datos en la tabla `playlists`.
+    - Convierte el DataFrame en una tupla para su inserción masiva en la base de datos.
+    - Inserta los datos en la base de datos usando `sql.insertar_muchos_datos()`.
+    """
+
     conexion = sql.conectar_bd()
     query = '''INSERT INTO playlists(playlist_name,playlist_id,follower_id) VALUES (%s,%s,%s)'''
     sql.insertar_muchos_datos(conexion,query,sql.generar_tupla(playlists_df))
 
 def obtener_tabla_reduced_playlists(playlists_df, brand_id = 0):
+    """
+    Genera una tabla de playlists reducidas asociadas a los seguidores de una marca para su posterior almacenamiento en la base de datos.
+
+    Parámetros:
+    ----------
+    playlists_df : pandas.DataFrame
+        DataFrame que contiene la información de las playlists, incluyendo `user_id` y `playlists`.
+
+    brand_id : int, opcional (por defecto 0)
+        Identificador único de la marca a la que pertenecen los seguidores y sus playlists.
+        Si el `brand_id` no es válido, se muestra un mensaje con los IDs de marcas disponibles.
+
+    Retorna:
+    -------
+    pandas.DataFrame
+        DataFrame con las columnas `playlist_name`, `playlist_id` y `id` (identificador del seguidor en la base de datos)
+        si el `brand_id` es válido.
+
+    Descripción:
+    -----------
+    - Consulta la base de datos para obtener la lista de marcas y sus IDs.
+    - Verifica si el `brand_id` ingresado existe en la base de datos.
+    - Si el `brand_id` no es válido, muestra un mensaje con los IDs de las marcas disponibles.
+    - Convierte las cadenas de texto de la columna `playlists` a diccionarios reales (`ast.literal_eval`).
+    - Reduce las playlists por usuario a un máximo de 10 elementos.
+    - Obtiene la lista de seguidores de la marca desde la base de datos.
+    - Realiza un merge entre los seguidores y sus playlists reducidas.
+    - Genera un DataFrame con cada playlist reducida, asignándola a su respectivo seguidor.
+    - Devuelve un DataFrame con las columnas `playlist_name`, `playlist_id` y `id`.
+    """
+
     conexion = sql.conectar_bd()
     query = ''' SELECT * FROM brands'''
     df = sql.consulta_sql(conexion, query)
@@ -137,7 +272,7 @@ def obtener_tabla_reduced_playlists(playlists_df, brand_id = 0):
     df_users = sql.consulta_sql(conexion,query)
     df_users = df_users[["id","user_id","username"]]
 
-# Realizamos merge y convertimos a diccionario "playlists"
+    # Realizamos merge y convertimos a diccionario "playlists"
     unir = pd.merge(left=df_users,right=playlists_df,on="user_id")
     playlists = unir[["id","reduced_playlists"]]
 
@@ -163,6 +298,26 @@ def obtener_tabla_reduced_playlists(playlists_df, brand_id = 0):
     return playlists
 
 def subir_reduced_playlists(playlists):
+    """
+    Inserta los datos de playlists reducidas en la base de datos en la tabla `reduced_playlists`.
+
+    Parámetros:
+    ----------
+    playlists : pandas.DataFrame
+        DataFrame que contiene la información de las playlists reducidas con las columnas `playlist_name`, `playlist_id` y `follower_id`.
+
+    Retorna:
+    -------
+    None
+
+    Descripción:
+    -----------
+    - Establece una conexión con la base de datos mediante `sql.conectar_bd()`.
+    - Prepara la consulta SQL para insertar los datos en la tabla `reduced_playlists`.
+    - Convierte el DataFrame en una tupla para su inserción masiva en la base de datos.
+    - Inserta los datos en la base de datos usando `sql.insertar_muchos_datos()`.
+    """
+
     conexion = sql.conectar_bd()
     query = '''INSERT INTO reduced_playlists(playlist_name,playlist_id,follower_id) VALUES (%s,%s,%s)'''
     sql.insertar_muchos_datos(conexion,query,sql.generar_tupla(playlists))

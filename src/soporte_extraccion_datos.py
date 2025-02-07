@@ -1,19 +1,106 @@
-from tqdm import tqdm
-import pandas as pd
-import os
-import ast
-import json
+#######################################################################################
+##            Barra de progreso y manipulación de datos                           ##
+#######################################################################################
+# Barra de progreso para seguir el avance de iteraciones o procesos largos
+from tqdm import tqdm  
+
+#######################################################################################
+##            Manejo de datos tabulares y estructuras                             ##
+#######################################################################################
+# Para manipulación y análisis de datos tabulares (DataFrames)
+import pandas as pd  
+# Para interactuar con el sistema operativo (rutas, variables de entorno, etc.)
+import os  
+# Para convertir cadenas en estructuras de datos Python
+import ast  
+# Para trabajar con datos en formato JSON
+import json  
+
+#######################################################################################
+##            Modificar el sistema de rutas                                          ##
+#######################################################################################
+# Agrega el directorio padre ("../") al sistema de rutas de búsqueda de módulos, permitiendo importar módulos desde ahí
 import sys
-sys.path.append("../")
-import src.soporte_spotify as api
+sys.path.append("../")  
+
+#######################################################################################
+##            Funciones personalizadas para Spotify                                  ##
+#######################################################################################
+# Funciones para interactuar con la API de Spotify
+import src.soporte_spotify as api  
+
+#######################################################################################
+##            Fin de los Imports                                                     ##
+#######################################################################################
+
 
 def str_a_diccionario(brand_df, columna):
+    """
+    Convierte los valores de una columna de un DataFrame de formato string a diccionarios.
+
+    Parámetros:
+    ----------
+    brand_df : pandas.DataFrame
+        DataFrame que contiene la columna con valores en formato string representando diccionarios.
+    
+    columna : str
+        Nombre de la columna cuyos valores serán convertidos de string a diccionario.
+
+    Retorna:
+    -------
+    pandas.Series
+        Serie con los valores de la columna convertidos en diccionarios.
+    """
+
     return brand_df[str(columna)].apply(ast.literal_eval)
 
 def str_a_lista(brand_df, columna):
+    """
+    Convierte los valores de una columna de un DataFrame de formato string a listas.
+
+    Parámetros:
+    ----------
+    brand_df : pandas.DataFrame
+        DataFrame que contiene la columna con valores en formato string representando listas.
+    
+    columna : str
+        Nombre de la columna cuyos valores serán convertidos de string a lista.
+
+    Retorna:
+    -------
+    pandas.Series
+        Serie con los valores de la columna convertidos en listas. 
+        Si el valor es NaN, se devuelve una lista vacía.
+    """
+
     return brand_df[str(columna)].apply(lambda x: ast.literal_eval(x) if pd.notna(x) else [])
 
 def obtener_id_artistas(brand_df,output_file = "../datos/01 Spotify/00_GuardadoTemporal.csv"):
+    """
+    Extrae los identificadores de artistas desde las playlists de los usuarios en un DataFrame.
+
+    Parámetros:
+    ----------
+    brand_df : pandas.DataFrame
+        DataFrame que contiene la información de las playlists de los seguidores de una marca.
+    
+    output_file : str, opcional (por defecto "../datos/01 Spotify/00_GuardadoTemporal.csv")
+        Ruta donde se guarda temporalmente el progreso en un archivo CSV.
+
+    Retorna:
+    -------
+    pandas.DataFrame
+        DataFrame con una nueva columna 'artistas' que contiene los artistas extraídos de las playlists.
+    
+    Descripción:
+    -----------
+    - Convierte la columna 'playlists' de string a diccionario.
+    - Extrae los identificadores de playlists y los limita a un máximo de 10 por usuario.
+    - Carga el progreso si existe un archivo previo, evitando procesar datos ya obtenidos.
+    - Obtiene los artistas de cada playlist usando la API de Spotify.
+    - Guarda el progreso en el archivo CSV después de cada iteración.
+    """
+
     # Convertir a Diccionario
     brand_df["playlists"] = str_a_diccionario(brand_df,"playlists")
     
@@ -60,6 +147,25 @@ def obtener_id_artistas(brand_df,output_file = "../datos/01 Spotify/00_GuardadoT
     return brand_df
 
 def obtener_artistas_unicos(brand_df):
+    """
+    Obtiene un diccionario de artistas únicos a partir de la columna 'artistas' de un DataFrame.
+
+    Parámetros:
+    ----------
+    brand_df : pandas.DataFrame
+        DataFrame que contiene una columna 'artistas', donde cada fila es un diccionario con identificadores de artistas como claves y nombres de artistas como valores.
+
+    Retorna:
+    -------
+    dict
+        Diccionario donde las claves son los identificadores únicos de artistas y los valores son los nombres de los artistas.
+
+    Descripción:
+    -----------
+    - Itera sobre la columna 'artistas' del DataFrame.
+    - Extrae los identificadores y nombres de los artistas, asegurando que no haya duplicados.
+    - Elimina la clave 'None' si está presente en el diccionario resultante.
+    """
     artistas_unicos = {}
     for dictio in brand_df["artistas"]:
         for id_artista, artista in dictio.items():
@@ -71,6 +177,26 @@ def obtener_artistas_unicos(brand_df):
     return artistas_unicos
 
 def obtener_ranking_artistas(brand_df):
+    """
+    Genera un ranking de artistas basado en su frecuencia de aparición en la columna 'artistas' de un DataFrame.
+
+    Parámetros:
+    ----------
+    brand_df : pandas.DataFrame
+        DataFrame que contiene una columna 'artistas', donde cada fila es un diccionario con identificadores de artistas como claves y nombres de artistas como valores.
+
+    Retorna:
+    -------
+    dict
+        Diccionario donde las claves son los nombres de los artistas y los valores representan la cantidad de veces que aparecen en la columna 'artistas'.
+
+    Descripción:
+    -----------
+    - Itera sobre la columna 'artistas' del DataFrame.
+    - Cuenta cuántas veces aparece cada artista en todas las playlists de los seguidores de la marca.
+    - Omite valores nulos (None) para evitar errores en el conteo.
+    """
+
     conteo_artistas = {}
     for dictio in brand_df["artistas"]:
         for artista in dictio.values():
@@ -80,6 +206,37 @@ def obtener_ranking_artistas(brand_df):
     return conteo_artistas
 
 def tabla_resumen(brand_df, followers_path, resumen_path):
+    """
+    Genera un resumen de datos sobre los seguidores de una marca, incluyendo el número de seguidores,
+    los artistas únicos y un ranking de los más escuchados.
+
+    Parámetros:
+    ----------
+    brand_df : pandas.DataFrame
+        DataFrame que contiene información sobre los seguidores de una marca y sus hábitos musicales.
+    
+    followers_path : str
+        Ruta donde se guardará el DataFrame actualizado con los datos procesados de los seguidores.
+    
+    resumen_path : str
+        Ruta donde se guardará el DataFrame resumen con los artistas únicos y el ranking de artistas.
+
+    Retorna:
+    -------
+    pandas.DataFrame
+        DataFrame resumen con la marca analizada, número total de seguidores, artistas únicos y ranking de artistas.
+
+    Descripción:
+    -----------
+    - Filtra usuarios cuyas playlists no contienen artistas.
+    - Convierte columnas de tipo string a listas o diccionarios según corresponda.
+    - Guarda el DataFrame actualizado con los seguidores en un CSV.
+    - Obtiene los artistas únicos y el ranking de artistas más escuchados.
+    - Crea un DataFrame resumen con la información relevante.
+    - Convierte las columnas del resumen a listas/diccionarios nuevamente para su correcta interpretación.
+    - Guarda el DataFrame resumen en un archivo CSV.
+    """
+
     # Eliminar aquellos users cuyas playlists no tenían artistas (no había canciones)
     brand_df = brand_df.loc[brand_df["artistas"] != "{}"]
     # Reemplazar los null por None para poder convertirlo a diccionarios
@@ -127,6 +284,32 @@ def tabla_resumen(brand_df, followers_path, resumen_path):
     return resumen_df
 
 def obtener_generos_artistas(brand_df, resumen_path):
+    """
+    Obtiene y almacena los géneros musicales de los artistas únicos asociados a una marca.
+
+    Parámetros:
+    ----------
+    brand_df : pandas.DataFrame
+        DataFrame que contiene información de los artistas únicos y su ranking para una marca específica.
+    
+    resumen_path : str
+        Ruta del archivo CSV donde se encuentra y se actualizará el resumen de la marca.
+
+    Retorna:
+    -------
+    pandas.DataFrame
+        DataFrame actualizado con la lista de géneros musicales y su ranking basado en frecuencia.
+
+    Descripción:
+    -----------
+    - Carga el DataFrame desde el archivo CSV de resumen.
+    - Convierte las columnas `unique_artists` y `artist_ranking` de string a diccionario y lista respectivamente.
+    - Solicita un token de autenticación para la API de Spotify.
+    - Obtiene los géneros musicales de los artistas únicos.
+    - Añade la lista de géneros y su ranking basado en frecuencia al DataFrame.
+    - Guarda el DataFrame actualizado en el archivo CSV de resumen.
+    """
+
     # Cargar Dataframe
     brand_df = pd.read_csv(resumen_path)
     # Convertir a diccionario
