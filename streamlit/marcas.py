@@ -49,6 +49,9 @@ url = os.getenv("project_url")
 key = os.getenv("browser_safe_key")
 supabase: Client = create_client(url, key)
 
+st.set_page_config(page_title="Vibes 4 Brands - La información que necesitas", page_icon="🎧")
+
+
 # Inicializar session_state para almacenar datos cargados y evitar múltiples consultas
 if "data_cargada" not in st.session_state:
     st.session_state["data_cargada"] = {}
